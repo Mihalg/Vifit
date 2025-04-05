@@ -10,7 +10,11 @@ export default defineConfig({
       "@/pages": path.resolve(__dirname, "src/pages"),
       "@/hooks": path.resolve(__dirname, "src/hooks"),
       "@/services": path.resolve(__dirname, "src/services"),
+      "@/lib": path.resolve(__dirname, "src/lib"),
     },
+  },
+  optimizeDeps: {
+    exclude: ["js-big-decimal"],
   },
   plugins: [react()],
 });

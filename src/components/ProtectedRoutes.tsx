@@ -1,17 +1,18 @@
+import PageNotFound from "@/pages/PageNotFound";
 import { useAuth } from "../hooks/useAuth";
 import { Outlet } from "react-router";
 
 function ProtectedRoutes({
   allowedRole,
 }: {
-  allowedRole: "dietitian" | "user";
+  allowedRole: "dietitian" | "patient";
 }) {
   const { role } = useAuth();
 
   if (role === allowedRole) {
     return <Outlet />;
   } else {
-    console.log("object");
+    return <PageNotFound />;
   }
 }
 

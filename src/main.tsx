@@ -1,10 +1,20 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { ErrorBoundary } from "react-error-boundary";
+import App from "./App.tsx";
+import "./index.css";
+import ErrorFalback from "./components/ErrorFalback.tsx";
 
-createRoot(document.getElementById('root')!).render(
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <ErrorBoundary
+      FallbackComponent={ErrorFalback}
+      onReset={() => {
+        window.location.replace("/login");
+      }}
+    >
+      <App />
+    </ErrorBoundary>
   </StrictMode>,
-)
+);

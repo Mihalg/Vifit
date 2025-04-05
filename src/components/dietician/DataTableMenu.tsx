@@ -1,0 +1,68 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { CopyIcon, Edit, Trash } from "lucide-react";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
+import { Button } from "../ui/Button";
+
+type Props = {
+  id: number;
+  queryKey: string;
+  deleteFn: (id: number) => Promise<void>;
+  duplicateFn: (id: number) => Promise<void>;
+};
+
+function DataTableMenu({ id, queryKey, deleteFn, duplicateFn }: Props) {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const { mutate: del } = useMutation({
+    mutationFn: deleteFn,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: [queryKey] });
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const { mutate: duplicate } = useMutation({
+    mutationFn: duplicateFn,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: [queryKey] });
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  return (
+    <div className="ml-auto flex w-fit space-x-2 text-right">
+      <Button
+        onClick={() => {
+          duplicate(id);
+        }}
+        title="Duplikuj"
+      >
+        <CopyIcon />
+      </Button>
+      <Button
+        onClick={() => {
+          void navigate(String(id));
+        }}
+        title="Edytuj"
+      >
+        <Edit />
+      </Button>
+      <Button
+        onClick={() => {
+          del(id);
+        }}
+        title="Usuń"
+      >
+        <Trash />
+      </Button>
+    </div>
+  );
+}
+
+export default DataTableMenu;

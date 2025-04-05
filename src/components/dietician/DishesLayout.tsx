@@ -1,0 +1,27 @@
+import { NavLink, Outlet } from "react-router";
+
+function DishesLayout() {
+  return (
+    <>
+      <div className="border-b-[1px] px-4 py-2">
+        <div className="flex w-fit gap-2 rounded-md bg-secondary-300 px-1 py-1">
+          <NavLink
+            to="posiłki"
+            className="topBar-navlink rounded-md px-4 py-2 font-semibold transition-colors"
+          >
+            Posiłki
+          </NavLink>
+          <NavLink
+            className="topBar-navlink rounded-md px-4 py-2 font-semibold transition-colors"
+            to="składniki"
+          >
+            Składniki
+          </NavLink>
+        </div>
+      </div>
+      <Outlet />
+    </>
+  );
+}
+
+export default DishesLayout;

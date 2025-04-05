@@ -1,26 +1,31 @@
-import { useAuth } from "../hooks/useAuth";
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router";
+import { useAuth } from "../hooks/useAuth";
+import Loader from "./ui/Loader";
 
 function AppLayout() {
   const { isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
-
   useEffect(() => {
     void async function () {
       if (!isAuthenticated && !isLoading) {
         await navigate("/login");
       }
-    };
+    }();
   }, [isAuthenticated, isLoading, navigate]);
+
+  if (isLoading)
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader />
+      </div>
+    );
 
   if (isAuthenticated)
     return (
-      <div className="flex flex-col bg-white xl:flex-row">
-        <main className="flex grow justify-center">
-          <Outlet />
-        </main>
-      </div>
+      <main>
+        <Outlet />
+      </main>
     );
 }
 
