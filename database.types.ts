@@ -16,15 +16,15 @@ export type Database = {
           created_at: string;
           date: string | null;
           dietitian_id: string | null;
-          fat_weight: number ;
-          height: number ;
+          fat_weight: number;
+          height: number;
           id: number;
-          muscle_weight: number | null ;
+          muscle_weight: number | null;
           notes: string | null;
           pal: number;
           patient_id: number;
           water_weight: number;
-          weight: number ;
+          weight: number;
         };
         Insert: {
           age?: number | null;
@@ -369,6 +369,78 @@ export type Database = {
           user_id?: string | null;
         };
         Relationships: [];
+      };
+      menus: {
+        Row: {
+          created_at: string;
+          id: number;
+          name: string;
+          dietitian_id: string;
+          calories: number;
+          carbs?: number;
+          fat?: number;
+          proteins?: number;
+        };
+        Insert: {
+          created_at?: string;
+          id?: number;
+          name: string;
+          dietitian_id: string;
+          calories: number;
+          carbs?: number;
+          fat?: number;
+          proteins?: number;
+        };
+        Update: {
+          created_at?: string;
+          id?: number;
+          name?: string;
+          dietitian_id?: string;
+          calories?: number;
+          carbs?: number;
+          fat?: number;
+          proteins?: number;
+        };
+        Relationships: [];
+      };
+      dishes_menus: {
+        Row: {
+          created_at: string;
+          dish_id: number;
+          id: number;
+          menu_id: number;
+          name: string;
+        };
+        Insert: {
+          created_at?: string;
+          dish_id?: number;
+          id?: number;
+          menu_id?: number;
+          name: string;
+        };
+        Update: {
+          created_at?: string;
+          dish_id?: number;
+          id?: number;
+          menu_id?: number;
+          name?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "meal_dishes_dish_id_fkey";
+            columns: ["dish_id"];
+            isOneToOne: false;
+            referencedRelation: "dishes";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "meal_dishes_meal_id_fkey";
+            columns: ["menu_id"];
+            isOneToOne: false;
+            referencedRelation: "menus";
+            referencedColumns: ["id"];
+          },
+        ];
       };
     };
     Views: {

@@ -31,6 +31,12 @@ function Dashboard() {
           >
             Baza posiłków
           </MainNav.NavRow>
+          <MainNav.NavRow
+            className="bg-primary-600 text-white hover:bg-primary-800 hover:text-white"
+            to="baza-jadłospisów"
+          >
+            Baza jadłospisów
+          </MainNav.NavRow>
         </div>
 
         <AddPatientForm />

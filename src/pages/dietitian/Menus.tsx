@@ -3,20 +3,20 @@ import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { DataTable } from "@/components/ui/DataTable";
 import Loader from "@/components/ui/Loader";
-import { deleteDish, duplicateDish, getDishesList } from "@/services/apiDishes";
+import { deleteDish, duplicateDish } from "@/services/apiDishes";
+import { deleteMenu, getMenusList } from "@/services/apiMenus";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import { Outlet, useLocation, useParams } from "react-router";
 
-type Dish = {
+type Menu = {
   id?: number;
   name: string;
-  category: string;
   calories: number;
 };
 
-const columns: ColumnDef<Dish>[] = [
+const columns: ColumnDef<Menu>[] = [
   {
     id: "id",
     header: ({ table }) => (
@@ -63,27 +63,6 @@ const columns: ColumnDef<Dish>[] = [
       <div className="text-center">{row.getValue("name")}</div>
     ),
   },
-
-  {
-    accessorKey: "category",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="w-full"
-          variant="ghost"
-          onClick={() => {
-            column.toggleSorting(column.getIsSorted() === "asc");
-          }}
-        >
-          Kategoria
-          <ArrowUpDown className="h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => {
-      return <div className="text-center">{row.getValue("category")}</div>;
-    },
-  },
   {
     accessorKey: "calories",
     header: ({ column }) => {
@@ -95,24 +74,24 @@ const columns: ColumnDef<Dish>[] = [
             column.toggleSorting(column.getIsSorted() === "asc");
           }}
         >
-          Kcal
+          Kalorie
           <ArrowUpDown className="h-4 w-4" />
         </Button>
       );
     },
-    cell: ({ row }) => {
-      return <div className="text-center">{row.getValue("calories")}</div>;
-    },
+    cell: ({ row }) => (
+      <div className="text-center">{row.getValue("calories")}</div>
+    ),
   },
 
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      if (row.original.id)
+      if (row.id)
         return (
           <DataTableMenu
-            id={row.original.id}
+            id={+row.id}
             queryKey="dishes"
             deleteFn={deleteDish}
             duplicateFn={duplicateDish}
@@ -122,30 +101,32 @@ const columns: ColumnDef<Dish>[] = [
   },
 ];
 
-function Dishes() {
+function Menus() {
   const { pathname } = useLocation();
   const { menuId } = useParams();
-
   const { data, isLoading } = useQuery({
     queryKey: ["menus"],
-    queryFn: getDishesList,
+    queryFn: getMenusList,
   });
 
-  if (pathname === "/panel/baza/posi%C5%82ki/nowy-posi%C5%82ek" || menuId)
+  if (
+    pathname === "/panel/baza-jad%C5%82ospis%C3%B3w/nowy" ||
+    menuId
+  )
     return <Outlet />;
 
   if (isLoading) return <Loader />;
 
   if (data)
     return (
-      <DataTable<Dish>
+      <DataTable<Menu>
         columns={columns}
         data={data}
         searchbarPlaceholder="Wyszukaj po nazwie"
-        queryToInvalidate="dishesDatabase"
-        deleteFn={deleteDish}
+        queryToInvalidate="menusList"
+        deleteFn={deleteMenu}
       />
     );
 }
 
-export default Dishes;
+export default Menus;

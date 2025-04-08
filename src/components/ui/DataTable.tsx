@@ -127,7 +127,7 @@ export function DataTable<T extends { id?: number | undefined }>({
 
         <Button
           onClick={() => {
-            void navigate("nowy-posiłek");
+            void navigate("nowy");
           }}
           className="ml-auto"
         >

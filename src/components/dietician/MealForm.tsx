@@ -77,9 +77,9 @@ function MealForm() {
   });
 
   const onSubmit: SubmitHandler<FormFields> = (data) => {
-    console.log(data);
     mutate({ meal: data, patientId, mealId, dietitianId });
   };
+
 
   if (isLoading) return <Loader />;
 

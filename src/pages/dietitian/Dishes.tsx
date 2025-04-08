@@ -131,7 +131,11 @@ function Dishes() {
     queryFn: getDishesList,
   });
 
-  if (pathname === "/panel/baza/posi%C5%82ki/nowy-posi%C5%82ek" || dishId)
+  if (
+    pathname ===
+      "/panel/baza/posi%C5%82ki/nowy" ||
+    dishId
+  )
     return <Outlet />;
 
   if (isLoading) return <Loader />;

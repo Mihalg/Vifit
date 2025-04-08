@@ -1,32 +1,15 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { getDishesList } from "@/services/apiDishes";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown } from "lucide-react";
+import { useState } from "react";
 import { UseFieldArrayAppend } from "react-hook-form";
 import { Input } from "../ui/Input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover";
-import { useState } from "react";
 
 type AddDishPopoverProps = {
-  append: UseFieldArrayAppend<
-    {
-      name: string;
-      time: string;
-      calories: number;
-      carbs: number;
-      fat: number;
-      proteins: number;
-      meal_dishes: {
-        id: number;
-        name: string;
-        calories: number;
-        carbs: number;
-        fat: number;
-        proteins: number;
-      }[];
-    },
-    never
-  >;
+  append: UseFieldArrayAppend<any>;
 };
 
 function AddDishPopover({ append }: AddDishPopoverProps) {
@@ -36,6 +19,7 @@ function AddDishPopover({ append }: AddDishPopoverProps) {
     queryKey: ["dishes"],
     queryFn: getDishesList,
   });
+
 
   return (
     <Popover modal={true}>

@@ -25,6 +25,8 @@ import PageNotFound from "./pages/PageNotFound";
 import Menu from "./pages/patient/Menu";
 import ShoppingList from "./pages/patient/ShoppingList";
 import VisitsHistory from "./pages/patient/VisitsHistory";
+import Menus from "./pages/dietitian/Menus";
+import MenusForm from "./components/dietician/MenusForm";
 
 const queryClient = new QueryClient();
 
@@ -50,17 +52,17 @@ function App() {
                 <Route path="baza" element={<DishesLayout />}>
                   <Route index element={<Navigate replace to="posiłki" />} />
                   <Route path="posiłki" element={<Dishes />}>
-                    <Route path="nowy-posiłek" element={<DishForm />} />
+                    <Route path="nowy" element={<DishForm />} />
                     <Route path=":dishId" element={<DishForm />} />
                   </Route>
-                  {/* <Route path="jadłospisy" element={<Menu />}>
-                    <Route path="nowy-jadłospis" element={<DishForm />} />
-                    <Route path=":menuId" element={<DishForm />} />
-                  </Route> */}
                   <Route path="składniki" element={<Ingredients />}>
-                    <Route path="nowy-składnik" element={<IngredientForm />} />
+                    <Route path="nowy" element={<IngredientForm />} />
                     <Route path=":ingredientId" element={<IngredientForm />} />
                   </Route>
+                </Route>
+                <Route path="baza-jadłospisów" element={<Menus />}>
+                  <Route path="nowy" element={<MenusForm />} />
+                  <Route path=":menuId" element={<DishForm />} />
                 </Route>
 
                 <Route path=":patientId" element={<Patients />}>

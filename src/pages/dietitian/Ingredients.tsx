@@ -136,7 +136,7 @@ function Ingredients() {
   });
 
   if (
-    pathname === "/panel/baza/sk%C5%82adniki/nowy-sk%C5%82adnik" ||
+    pathname === "/panel/baza/sk%C5%82adniki/nowy" ||
     ingredientId
   )
     return <Outlet />;
