@@ -37,7 +37,7 @@ function AddDishPopover({ append }: AddDishPopoverProps) {
             placeholder="Wyszukaj nazwę"
           />
           <div className="flex w-full items-center justify-between rounded-sm px-2 py-1">
-            <span className="w-[100px]">Nazwa</span>
+            <span className="w-[150px]">Nazwa</span>
             <span>Kcal</span>
             <span>W</span>
             <span>T</span>
@@ -56,7 +56,7 @@ function AddDishPopover({ append }: AddDishPopoverProps) {
                       key={i}
                       className="flex w-full cursor-pointer items-center justify-between rounded-sm px-2 py-1 transition-colors hover:bg-primary-50"
                     >
-                      <span className="w-[100px] overflow-clip text-ellipsis text-nowrap text-start">
+                      <span className="w-[150px] overflow-clip text-ellipsis text-nowrap text-start">
                         {dish.name}
                       </span>
                       <span>{dish.calories}</span>
@@ -76,7 +76,7 @@ function AddDishPopover({ append }: AddDishPopoverProps) {
                     key={i}
                     className="flex w-full cursor-pointer items-center justify-between rounded-sm px-2 py-1 transition-colors hover:bg-primary-50"
                   >
-                    <span className="w-[100px] overflow-clip text-ellipsis text-nowrap text-start">
+                    <span className="w-[150px] overflow-clip text-ellipsis text-nowrap text-start">
                       {dish.name}
                     </span>
                     <span>{dish.calories}</span>

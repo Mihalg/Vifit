@@ -10,7 +10,7 @@ import DishesLayout from "./components/dietician/DishesLayout";
 import DishForm from "./components/dietician/DishForm";
 import IngredientForm from "./components/dietician/IngredientForm";
 import MealForm from "./components/dietician/MealForm";
-import Login from "./components/Login";
+import Login from "./pages/Login";
 import AppointmentData from "./components/patient/AppointmentData";
 import UserPanel from "./components/patient/UserPanel";
 import ProtectedRoutes from "./components/ProtectedRoutes";
@@ -27,6 +27,7 @@ import ShoppingList from "./pages/patient/ShoppingList";
 import VisitsHistory from "./pages/patient/VisitsHistory";
 import Menus from "./pages/dietitian/Menus";
 import MenusForm from "./components/dietician/MenusForm";
+import Register from "./pages/Register";
 
 const queryClient = new QueryClient();
 
@@ -37,7 +38,8 @@ function App() {
       <ReactQueryDevtools initialIsOpen={false} />
       <BrowserRouter>
         <Routes>
-          <Route path="login" element={<Login />} />
+          <Route index element={<Login />} />
+          <Route path="rejestracja" element={<Register />} />
           <Route element={<AppLayout />}>
             <Route element={<ProtectedRoutes allowedRole="dietitian" />}>
               <Route path="panel" element={<Dashboard />}>
@@ -62,7 +64,7 @@ function App() {
                 </Route>
                 <Route path="baza-jadłospisów" element={<Menus />}>
                   <Route path="nowy" element={<MenusForm />} />
-                  <Route path=":menuId" element={<DishForm />} />
+                  <Route path=":menuId" element={<MenusForm />} />
                 </Route>
 
                 <Route path=":patientId" element={<Patients />}>

@@ -17,8 +17,6 @@ export function useDishToEdit(dishId: string | undefined) {
       };
     });
 
-    console.log(mergedIngredients);
-
     const dish = {
       name: data.name,
       calories: data.calories,
@@ -30,7 +28,6 @@ export function useDishToEdit(dishId: string | undefined) {
       proteins: data.proteins,
     };
 
-    console.log(dish);
     return { dish, isLoading };
   } else return { dish: undefined, isLoading };
 }

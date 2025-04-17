@@ -3,8 +3,7 @@ import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { DataTable } from "@/components/ui/DataTable";
 import Loader from "@/components/ui/Loader";
-import { deleteDish, duplicateDish } from "@/services/apiDishes";
-import { deleteMenu, getMenusList } from "@/services/apiMenus";
+import { deleteMenu, duplicateMenu, getMenusList } from "@/services/apiMenus";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
@@ -14,6 +13,9 @@ type Menu = {
   id?: number;
   name: string;
   calories: number;
+  carbs: number | undefined;
+  fat: number | undefined;
+  proteins: number | undefined;
 };
 
 const columns: ColumnDef<Menu>[] = [
@@ -83,18 +85,78 @@ const columns: ColumnDef<Menu>[] = [
       <div className="text-center">{row.getValue("calories")}</div>
     ),
   },
+  {
+    accessorKey: "carbs",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="w-full"
+          variant="ghost"
+          onClick={() => {
+            column.toggleSorting(column.getIsSorted() === "asc");
+          }}
+        >
+          Węglowodany
+          <ArrowUpDown className="h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <div className="text-center">{row.getValue("carbs")}</div>
+    ),
+  },
+  {
+    accessorKey: "fat",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="w-full"
+          variant="ghost"
+          onClick={() => {
+            column.toggleSorting(column.getIsSorted() === "asc");
+          }}
+        >
+          Tłuszcze
+          <ArrowUpDown className="h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <div className="text-center">{row.getValue("fat")}</div>
+    ),
+  },
+  {
+    accessorKey: "proteins",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="w-full"
+          variant="ghost"
+          onClick={() => {
+            column.toggleSorting(column.getIsSorted() === "asc");
+          }}
+        >
+          Białko
+          <ArrowUpDown className="h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <div className="text-center">{row.getValue("proteins")}</div>
+    ),
+  },
 
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      if (row.id)
+      if (row.original.id)
         return (
           <DataTableMenu
-            id={+row.id}
-            queryKey="dishes"
-            deleteFn={deleteDish}
-            duplicateFn={duplicateDish}
+            id={+row.original.id}
+            queryKey="menus"
+            deleteFn={deleteMenu}
+            duplicateFn={duplicateMenu}
           />
         );
     },
@@ -105,14 +167,11 @@ function Menus() {
   const { pathname } = useLocation();
   const { menuId } = useParams();
   const { data, isLoading } = useQuery({
-    queryKey: ["menus"],
+    queryKey: ["menusList"],
     queryFn: getMenusList,
   });
 
-  if (
-    pathname === "/panel/baza-jad%C5%82ospis%C3%B3w/nowy" ||
-    menuId
-  )
+  if (pathname === "/panel/baza-jad%C5%82ospis%C3%B3w/nowy" || menuId)
     return <Outlet />;
 
   if (isLoading) return <Loader />;

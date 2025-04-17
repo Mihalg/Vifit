@@ -3,11 +3,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeftIcon } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 import { login, recoverPassword } from "../services/apiAuth";
-import { Button } from "./ui/Button";
-import { Input } from "./ui/Input";
+import { Button } from "../components/ui/Button";
+import { Input } from "../components/ui/Input";
 
 function Login() {
   const queryClient = useQueryClient();
@@ -112,7 +112,11 @@ function Login() {
                       disabled={isRecovering}
                     />
                   </div>
-                  <Button type="submit" className="w-full">
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={isRecovering}
+                  >
                     {isRecovering ? "Ładowanie..." : "Przypomnij hasło"}
                   </Button>
                 </div>
@@ -139,6 +143,8 @@ function Login() {
                       id="email"
                       type="email"
                       required
+                      max={50}
+                      disabled={isPending}
                     />
                   </div>
                   <div className="mb-3 grid gap-2">
@@ -163,11 +169,24 @@ function Login() {
                       type="password"
                       autoComplete="current-password"
                       required
+                      min={8}
+                      max={50}
+                      disabled={isPending}
                     />
                   </div>
-                  <Button type="submit" className="w-full">
+                  <Button type="submit" className="w-full"  disabled={isPending}>
                     {isPending ? "Ładowanie..." : "Zaloguj się"}
                   </Button>
+                </div>
+
+                <div className="mt-4 flex gap-2">
+                  <p>Nowy użytkownik?</p>
+                  <Link
+                    className="text-primary-700 hover:underline"
+                    to="rejestracja"
+                  >
+                    Zarejestruj się
+                  </Link>
                 </div>
               </form>
             </>

@@ -129,7 +129,6 @@ export function DataTable<T extends { id?: number | undefined }>({
           onClick={() => {
             void navigate("nowy");
           }}
-          className="ml-auto"
         >
           <span className="flex items-center gap-1">
             Dodaj <Plus className="h-5" />

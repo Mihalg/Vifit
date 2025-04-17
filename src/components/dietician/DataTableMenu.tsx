@@ -15,7 +15,7 @@ function DataTableMenu({ id, queryKey, deleteFn, duplicateFn }: Props) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const { mutate: del } = useMutation({
+  const { mutateAsync: del } = useMutation({
     mutationFn: deleteFn,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [queryKey] });
@@ -55,7 +55,11 @@ function DataTableMenu({ id, queryKey, deleteFn, duplicateFn }: Props) {
       </Button>
       <Button
         onClick={() => {
-          del(id);
+          void toast.promise(del(id), {
+            loading: "Usuwanie...",
+            success: "Sukces",
+            error: "Nie udało się usunąć pozycji.",
+          });
         }}
         title="Usuń"
       >

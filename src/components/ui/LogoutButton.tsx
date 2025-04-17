@@ -10,7 +10,7 @@ function LogoutButton() {
   const { mutate } = useMutation({
     mutationFn: logout,
     onSuccess: async () => {
-      await navigate("/login", { replace: true });
+      await navigate("/", { replace: true });
       queryClient.removeQueries();
     },
   });

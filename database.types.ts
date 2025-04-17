@@ -148,9 +148,9 @@ export type Database = {
           dietitian_id?: string | null;
           id?: number;
           name?: string | null;
-          carbs: number;
-          fat: number;
-          proteins: number;
+          carbs?: number;
+          fat?: number;
+          proteins?: number;
         };
         Relationships: [
           {
@@ -300,10 +300,10 @@ export type Database = {
           id?: number;
           name?: string;
           time?: string;
-          calories: number;
-          carbs: number;
-          fat: number;
-          proteins: number;
+          calories?: number;
+          carbs?: number;
+          fat?: number;
+          proteins?: number;
         };
         Relationships: [];
       };
@@ -350,23 +350,26 @@ export type Database = {
           id: number;
           role: string;
           sex: "female" | "male" | null;
-          user_id: string | null;
+          user_id: string;
+          email: string
         };
         Insert: {
           created_at?: string;
           full_name: string;
           id?: number;
-          role?: string;
-          sex: "female" | "male" | null;
-          user_id?: string | null;
+          role: string;
+          sex: string;
+          user_id: string | null;
+          email: string
         };
         Update: {
           created_at?: string;
           full_name?: string;
           id?: number;
           role?: string;
-          sex: "female" | "male" | null;
+          sex?: string;
           user_id?: string | null;
+          email?: string
         };
         Relationships: [];
       };
@@ -410,6 +413,8 @@ export type Database = {
           id: number;
           menu_id: number;
           name: string;
+          calories: number;
+          time: string;
         };
         Insert: {
           created_at?: string;
@@ -417,6 +422,8 @@ export type Database = {
           id?: number;
           menu_id?: number;
           name: string;
+          calories: number;
+          time: string;
         };
         Update: {
           created_at?: string;
@@ -424,6 +431,8 @@ export type Database = {
           id?: number;
           menu_id?: number;
           name?: string;
+          calories?: number;
+          time?: string;
         };
         Relationships: [
           {

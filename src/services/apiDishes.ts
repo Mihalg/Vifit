@@ -168,7 +168,7 @@ export async function duplicateDish(id: number) {
   const { data: dish, error: getDishError } = await supabase
     .from("dishes")
     .select(
-      "dietitian_id, name, description, calories, category, carbs, fat, proteins, dish_ingredients(dish_id, ingredient_id, quantity, quantity_in_words)",
+      "dietitian_id, name, description, calories, category, carbs, fat, proteins, dish_ingredients( ingredient_id, quantity, quantity_in_words)",
     )
     .eq("id", id)
     .single();
@@ -186,16 +186,20 @@ export async function duplicateDish(id: number) {
     proteins: dish.proteins,
   };
 
-  const { error: addDishError } = await supabase
+  const { data, error: addDishError } = await supabase
     .from("dishes")
-    .insert(dishToDuplicate);
+    .insert(dishToDuplicate)
+    .select()
+    .single();
 
   if (addDishError) {
     console.log(addDishError);
     throw new Error("Nie udało się zduplikować posiłku");
   }
 
-  const ingredientsToDuplicate = dish.dish_ingredients;
+  const ingredientsToDuplicate = dish.dish_ingredients.map((item) => {
+    return { ...item, dish_id: data.id };
+  });
 
   const { error: addIngredientsError } = await supabase
     .from("dish_ingredients")

@@ -11,7 +11,7 @@ createRoot(document.getElementById("root")!).render(
     <ErrorBoundary
       FallbackComponent={ErrorFalback}
       onReset={() => {
-        window.location.replace("/login");
+        window.location.replace("/");
       }}
     >
       <App />

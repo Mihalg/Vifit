@@ -127,7 +127,7 @@ function Dishes() {
   const { dishId } = useParams();
 
   const { data, isLoading } = useQuery({
-    queryKey: ["dishes"],
+    queryKey: ["dishesList"],
     queryFn: getDishesList,
   });
 
@@ -146,7 +146,7 @@ function Dishes() {
         columns={columns}
         data={data}
         searchbarPlaceholder="Wyszukaj po nazwie"
-        queryToInvalidate="dishesDatabase"
+        queryToInvalidate="dishesList"
         deleteFn={deleteDish}
       />
     );

@@ -2,23 +2,29 @@ import supabase from "./supabase";
 
 export async function addNewPatient({
   email,
-  fullName,
   dietitianId,
 }: {
   email: string;
-  fullName: string;
   dietitianId: string;
 }) {
-  const { error } = await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      data: { full_name: fullName, dietitian_id: dietitianId },
-    },
-  });
+  const { data: patientId, error: getPatientError } = await supabase
+    .from("users")
+    .select("user_id")
+    .eq("email", email)
+    .single();
+
+  if (getPatientError) {
+    console.error(getPatientError);
+    throw new Error("Nie znaleziono pacjenta o podanym adresie e-mail.");
+  }
+
+  const { error } = await supabase
+    .from("patients")
+    .insert({ dietitian_id: dietitianId, patient_id: patientId.user_id });
 
   if (error) {
     console.log(error.message);
-    throw new Error("Nie udało się dodać pacjenta.");
+    throw new Error("Wystąpił błąd. Nie udało się dodać pacjenta.");
   }
 }
 export async function getPatientsList() {
@@ -33,7 +39,3 @@ export async function getPatientsList() {
 
   return patients;
 }
-
-
-
-

@@ -16,7 +16,7 @@ function Dashboard() {
   });
 
   return (
-    <div className="flex flex-col xl:max-h-screen xl:flex-row xl:overflow-hidden">
+    <div className="flex flex-col xl:max-h-screen xl:flex-row xl:overflow-auto">
       <SideBar>
         <div className="mb-4 flex flex-col gap-2 border-b-2 border-b-secondary-300 pb-4">
           <MainNav.NavRow
@@ -75,7 +75,7 @@ function Dashboard() {
             })
           : null}
       </SideBar>
-      <div className="w-full">
+      <div className="w-full max-h-screen overflow-auto">
         <Outlet />
       </div>
     </div>

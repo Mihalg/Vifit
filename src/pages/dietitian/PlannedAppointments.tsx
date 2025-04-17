@@ -9,7 +9,7 @@ import { Calendar, dateFnsLocalizer, stringOrDate } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import toast from "react-hot-toast";
-import "../../react-big-calendar.css";
+import '../../react-big-calendar.css'
 import useDietitianId from "@/hooks/useDietitianId";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { editCalendar, getCalendar } from "@/services/apiCalendar";
@@ -157,7 +157,7 @@ function PlannedAppointments() {
         popup
         selectable
         resizable
-        allDayMaxRows={0}
+        allDayMaxRows={2}
         onEventDrop={moveEvent}
         onEventResize={resizeEvent}
         onSelectSlot={handleSelectSlot}

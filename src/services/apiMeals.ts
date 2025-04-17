@@ -144,14 +144,56 @@ export async function addEditMeal({
   }
 }
 
+// export async function addPatientMenu({
+//   menu,
+//   patientId,
+//   dietitianId,
+// }: {
+//   menu: {
+//     name: string;
+//     calories: number;
+//     carbs: number;
+//     fat: number;
+//     proteins: number;
+//     menu_meals: {
+//       name: string;
+//       calories: number;
+//       time: string;
+//       dishes: {
+//         id: number | undefined;
+//         category: string;
+//         name: string;
+//         calories: number;
+//         carbs: number;
+//         fat: number;
+//         proteins: number;
+//       }[];
+//     }[];
+//   };
+//   patientId: string | undefined;
+//   dietitianId: string | undefined;
+// }) {
+// // const mealsToAdd = menu.menu_meals
+
+// // const mealsToAdd = menu.menu_meals{
+// //   name: meal.name,
+// //   time: meal.time,
+// //   calories: meal.calories,
+// //   carbs: meal.carbs,
+// //   fat: meal.fat,
+// //   proteins: meal.proteins,
+// //   patient_id: patientId,
+// //   dietitian_id: dietitianId,
+// // }
+
+// }
+
 export async function getPatientMeals() {
   const { data: meals, error } = await supabase
     .from("meals")
     .select(
       "name, time, meal_dishes ( dish_id (id, name, description, dish_ingredients (quantity, quantity_in_words, ingredient_id(name, unit))))",
     );
-
-  
 
   if (error) throw new Error("Nie udało się pobrać jadłospisu");
 

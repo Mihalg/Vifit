@@ -1,5 +1,5 @@
 import useDietitianId from "@/hooks/useDietitianId";
-import { useMealToEdit } from "@/hooks/useMealToEdit";
+import useMenuToEdit from "@/hooks/useMenuToEdit";
 import { useMoveBack } from "@/hooks/useMoveBack";
 import { addEditMenu } from "@/services/apiMenus";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -47,7 +47,7 @@ export default function MenusForm() {
   const dietitianId = useDietitianId();
   const moveBack = useMoveBack();
   const { menuId } = useParams();
-  const { meal, isLoading } = useMealToEdit(menuId);
+  const { menu, isLoading } = useMenuToEdit(menuId);
 
   const { register, handleSubmit, control, reset } = useForm<FormFields>({
     defaultValues: {
@@ -75,11 +75,11 @@ export default function MenusForm() {
     const isReset = useRef(false);
 
     useEffect(() => {
-      if (meal && !isReset.current) {
-        reset(meal);
+      if (menu && !isReset.current) {
+        reset(menu);
         isReset.current = true;
       }
-    }, [meal, reset]);
+    }, [menu, reset]);
 
     const { mutate } = useMutation({
       mutationFn: addEditMenu,
@@ -93,16 +93,15 @@ export default function MenusForm() {
         toast.error(err.message);
       },
     });
+    
     const onSubmit: SubmitHandler<FormFields> = (data) => {
       mutate({ menu: data, menuId, dietitianId });
     };
 
     if (isLoading) return <Loader />;
 
-    console.log(fields);
-
     return (
-      <div className="max-h-[900px] scroll-mb-56 lg:overflow-y-auto">
+      <div className="xl:max-h-screen overflow-y-auto">
         <Button
           className="ml-4 mt-4"
           onClick={() => {
@@ -114,7 +113,7 @@ export default function MenusForm() {
         <form
           // eslint-disable-next-line @typescript-eslint/no-misused-promises
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-4 px-6 pb-8 pt-4"
+          className="flex flex-col gap-4 px-6 py-4 pb-8 h-full"
         >
           <div className="grid grid-cols-1 gap-2 lg:grid-cols-2">
             <div>
@@ -154,7 +153,7 @@ export default function MenusForm() {
           {fields.map((field, i) => (
             <div
               key={field.id}
-              className="flex flex-col gap-6 rounded-md px-4 py-4 shadow-md border"
+              className="flex flex-col gap-6 rounded-md border px-4 py-4 shadow-md"
             >
               <div className="flex flex-col gap-4 lg:flex-row">
                 <div className="grow">
@@ -179,7 +178,7 @@ export default function MenusForm() {
                   <Label htmlFor={`menu_meals.${i}.time`}>Godzina</Label>
                   <Input
                     id={`menu_meals.${i}.time`}
-                    type="text"
+                    type="time"
                     required
                     {...register(`menu_meals.${i}.time`)}
                   />
@@ -251,7 +250,7 @@ function NestedDishesForm({
         <AddDishPopover append={appendDish} />
       </div>
 
-      <div className="space-y-2 mt-4">
+      <div className="mt-4 space-y-2">
         {dishesFields.map((field, i) => (
           <div className="flex flex-col gap-4 lg:flex-row" key={field.id}>
             <Input
