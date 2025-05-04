@@ -1,3 +1,4 @@
+import { getMenu } from "./apiMenus";
 import supabase from "./supabase";
 
 export async function getMealsList(patientId: string | undefined) {
@@ -5,7 +6,7 @@ export async function getMealsList(patientId: string | undefined) {
 
   const { data: meals, error } = await supabase
     .from("meals")
-    .select("id, name,calories, time, carbs, fat, proteins")
+    .select("id, name,calories, time")
     .eq("patient_id", patientId);
 
   if (error) throw new Error("Nie udało się pobrać listy posiłków.");
@@ -22,9 +23,6 @@ export async function getMeal(id: string | null) {
     name, 
     time, 
     calories, 
-    carbs,
-    fat,
-    proteins, 
     meal_dishes (
       dish_id (
         id,
@@ -57,9 +55,6 @@ export async function addEditMeal({
     name: string;
     time: string;
     calories: number;
-    carbs: number;
-    fat: number;
-    proteins: number;
     meal_dishes: {
       id: number;
       name: string;
@@ -79,9 +74,6 @@ export async function addEditMeal({
       name: meal.name,
       time: meal.time,
       calories: meal.calories,
-      carbs: meal.carbs,
-      fat: meal.fat,
-      proteins: meal.proteins,
       patient_id: patientId,
       dietitian_id: dietitianId,
     };
@@ -113,9 +105,6 @@ export async function addEditMeal({
       name: meal.name,
       time: meal.time,
       calories: meal.calories,
-      carbs: meal.carbs,
-      fat: meal.fat,
-      proteins: meal.proteins,
     };
 
     const { error: editMealError } = await supabase
@@ -144,49 +133,81 @@ export async function addEditMeal({
   }
 }
 
-// export async function addPatientMenu({
-//   menu,
-//   patientId,
-//   dietitianId,
-// }: {
-//   menu: {
-//     name: string;
-//     calories: number;
-//     carbs: number;
-//     fat: number;
-//     proteins: number;
-//     menu_meals: {
-//       name: string;
-//       calories: number;
-//       time: string;
-//       dishes: {
-//         id: number | undefined;
-//         category: string;
-//         name: string;
-//         calories: number;
-//         carbs: number;
-//         fat: number;
-//         proteins: number;
-//       }[];
-//     }[];
-//   };
-//   patientId: string | undefined;
-//   dietitianId: string | undefined;
-// }) {
-// // const mealsToAdd = menu.menu_meals
+export async function addPatientMenu({
+  menuId,
+  patientId,
+  dietitianId,
+}: {
+  menuId: number;
+  patientId: string | undefined;
+  dietitianId: string | undefined;
+}) {
+  if (!patientId || !dietitianId) return;
 
-// // const mealsToAdd = menu.menu_meals{
-// //   name: meal.name,
-// //   time: meal.time,
-// //   calories: meal.calories,
-// //   carbs: meal.carbs,
-// //   fat: meal.fat,
-// //   proteins: meal.proteins,
-// //   patient_id: patientId,
-// //   dietitian_id: dietitianId,
-// // }
+  const menu = await getMenu(menuId);
 
-// }
+  if (!menu) return;
+
+  const { error: deleteMenuError } = await supabase
+    .from("meals")
+    .delete()
+    .eq("patient_id", patientId);
+
+  if (deleteMenuError) {
+    console.log(deleteMenuError);
+    throw new Error("Nie udało się przypisać jadłospisu");
+  }
+
+  const mealsToAdd = Object.values(
+    menu.dishes_menus.reduce<
+      Record<
+        string,
+        {
+          name: string;
+          calories: number;
+          time: string;
+          patient_id: string;
+          dietitian_id: string;
+        }
+      >
+    >((acc, dish) => {
+      if (!(dish.name in acc)) {
+        acc[dish.name] = {
+          dietitian_id: dietitianId,
+          patient_id: patientId,
+          name: dish.name,
+          calories: dish.calories,
+          time: dish.time,
+        };
+      }
+      return acc;
+    }, {}),
+  );
+
+  const { data, error: addMealsError } = await supabase
+    .from("meals")
+    .insert(mealsToAdd)
+    .select();
+
+  if (addMealsError) {
+    console.log(addMealsError);
+    throw new Error("Nie udało się przypisać jadłospisu");
+  }
+
+  const dishesToAdd = menu.dishes_menus.map((item) => {
+    const meal = data.find((el) => el.name === item.name);
+    return { dish_id: item.dish_id.id, meal_id: meal?.id };
+  });
+
+  const { error: addDishesError } = await supabase
+    .from("meal_dishes")
+    .insert(dishesToAdd);
+
+  if (addDishesError) {
+    console.log(addDishesError);
+    throw new Error("Nie udało się przypisać jadłospisu");
+  }
+}
 
 export async function getPatientMeals() {
   const { data: meals, error } = await supabase

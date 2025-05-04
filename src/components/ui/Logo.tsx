@@ -1,13 +1,11 @@
-function Logo({
-  dark = true,
-  className,
-}: {
-  dark?: boolean;
-  className?: string;
-}) {
+import { UseDarkModeContext } from "@/lib/utils";
+
+function Logo({ className }: { className?: string }) {
+  const { isDarkModeOn } = UseDarkModeContext();
+
   return (
     <div className={className}>
-      <img src={`/logo-${dark ? "dark" : "light"}.png`} alt="Logo" />
+      <img src={`/logo-${isDarkModeOn ? "light" : "dark"}.png`} alt="Logo" />
     </div>
   );
 }

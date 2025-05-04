@@ -20,27 +20,26 @@ function DataTableMenu({ id, queryKey, deleteFn, duplicateFn }: Props) {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [queryKey] });
     },
-    onError: (error) => {
-      toast.error(error.message);
-    },
   });
 
-  const { mutate: duplicate } = useMutation({
+  const { mutateAsync: duplicate } = useMutation({
     mutationFn: duplicateFn,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [queryKey] });
     },
-    onError: (error) => {
-      toast.error(error.message);
-    },
+  
   });
 
   return (
     <div className="ml-auto flex w-fit space-x-2 text-right">
       <Button
-        onClick={() => {
-          duplicate(id);
-        }}
+       onClick={() => {
+        void toast.promise(duplicate(id), {
+          loading: "Duplikowanie...",
+          success: "Sukces",
+          error: "Nie udało się zduplikować pozycji.",
+        });
+      }}
         title="Duplikuj"
       >
         <CopyIcon />

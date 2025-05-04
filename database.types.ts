@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 /* eslint-disable @typescript-eslint/no-redundant-type-constituents */
 export type Json =
   | string
@@ -201,10 +203,11 @@ export type Database = {
         Row: {
           created_at: string;
           dietitian_id: string;
-          end: string;
+          end: Date;
           id: number;
-          start: string;
+          start: Date;
           title: string;
+          subtitle: string | undefined;
         };
         Insert: {
           created_at?: string;
@@ -212,15 +215,17 @@ export type Database = {
           end?: string | Date;
           id?: number;
           start?: string | Date;
-          title?: string;
+          title?: ReactNode;
+          subtitle?: ReactNode | undefined;
         };
         Update: {
           created_at?: string;
           dietitian_id?: string;
-          end?: string;
+          end?: string | Date;
           id?: number;
-          start?: string;
-          title?: string;
+          start?: string | Date;
+          title?: ReactNode;
+          subtitle?: ReactNode;
         };
         Relationships: [
           {
@@ -277,9 +282,6 @@ export type Database = {
           name: string;
           time: string;
           calories: number;
-          carbs: number;
-          fat: number;
-          proteins: number;
         };
         Insert: {
           client_id?: string;
@@ -289,9 +291,6 @@ export type Database = {
           name?: string;
           time?: string;
           calories: number;
-          carbs: number;
-          fat: number;
-          proteins: number;
         };
         Update: {
           client_id?: string;
@@ -301,9 +300,6 @@ export type Database = {
           name?: string;
           time?: string;
           calories?: number;
-          carbs?: number;
-          fat?: number;
-          proteins?: number;
         };
         Relationships: [];
       };
@@ -351,7 +347,7 @@ export type Database = {
           role: string;
           sex: "female" | "male" | null;
           user_id: string;
-          email: string
+          email: string;
         };
         Insert: {
           created_at?: string;
@@ -360,7 +356,7 @@ export type Database = {
           role: string;
           sex: string;
           user_id: string | null;
-          email: string
+          email: string;
         };
         Update: {
           created_at?: string;
@@ -369,7 +365,7 @@ export type Database = {
           role?: string;
           sex?: string;
           user_id?: string | null;
-          email?: string
+          email?: string;
         };
         Relationships: [];
       };

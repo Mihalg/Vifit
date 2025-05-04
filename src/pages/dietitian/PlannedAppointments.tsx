@@ -1,180 +1,157 @@
-import { Button } from "@/components/ui/Button";
-import { format } from "date-fns/format";
-import { getDay } from "date-fns/getDay";
-import { pl } from "date-fns/locale/pl";
-import { parse } from "date-fns/parse";
-import { startOfWeek } from "date-fns/startOfWeek";
-import { useEffect, useRef, useState } from "react";
-import { Calendar, dateFnsLocalizer, stringOrDate } from "react-big-calendar";
-import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
-import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
-import toast from "react-hot-toast";
-import '../../react-big-calendar.css'
 import useDietitianId from "@/hooks/useDietitianId";
+import { UseDarkModeContext } from "@/lib/utils";
+import {
+  createEditEvent,
+  deleteEvent,
+  getCalendar,
+} from "@/services/apiCalendar";
+import { Scheduler } from "@aldabil/react-scheduler";
+import { ProcessedEvent } from "@aldabil/react-scheduler/types";
+import { createTheme, ThemeProvider } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { editCalendar, getCalendar } from "@/services/apiCalendar";
-import Loader from "@/components/ui/Loader";
+import { pl } from "date-fns/locale/pl";
+import toast from "react-hot-toast";
 
-type CalendarEvent = {
-  event: {
-    id?: number;
-    start?: stringOrDate;
-    end?: stringOrDate;
-    title?: string;
-  };
-  start: stringOrDate;
-  end: stringOrDate;
-};
+const darkTheme = createTheme({
+  palette: {
+    mode: "dark",
+    primary: {
+      main: "#4f46e5",
+    },
+    secondary: {
+      main: "#4f46e5",
+    },
+    grey: {
+      "300": "#696969",
+    },
+    background: {
+      paper: "#161617",
+    },
+    error: {
+      main: "#4f46e5",
+    },
+  },
+});
 
-const DnDCalendar = withDragAndDrop(Calendar);
-
-const locales = {
-  pl: pl,
-};
-const localizer = dateFnsLocalizer({
-  format,
-  parse,
-  startOfWeek,
-  getDay,
-  locales,
+const lightTheme = createTheme({
+  palette: {
+    mode: "light",
+    primary: {
+      main: "#4f46e5",
+    },
+    secondary: {
+      main: "#4f46e5",
+    },
+    error: {
+      main: "#4f46e5",
+    },
+  },
 });
 
 function PlannedAppointments() {
   const queryClient = useQueryClient();
   const dietitianId = useDietitianId();
-  const { data, isLoading } = useQuery({
+  const { isDarkModeOn } = UseDarkModeContext();
+
+  const { refetch } = useQuery<ProcessedEvent[]>({
     queryKey: ["calendar"],
     queryFn: getCalendar,
+    enabled: false,
   });
 
-  const isSucces = useRef(false);
-  useEffect(() => {
-    //Check if calendar has been already updated
-    if (data && !isSucces.current) {
-      setEvents(data);
-      isSucces.current = true;
-    }
-  }, [isSucces, data]);
-
-  const [events, setEvents] = useState<
-    {
-      id?: number;
-      start: stringOrDate;
-      end: stringOrDate;
-      title?: string;
-    }[]
-  >([]);
-
-  const { mutateAsync } = useMutation({
-    mutationFn: editCalendar,
+  const { mutateAsync: handleAddEdit } = useMutation({
+    mutationFn: createEditEvent,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["calendar"] });
     },
+    onError: (err) => {
+      toast.error(err.message);
+    },
   });
 
-  function handleSelectEvent(event: {
-    id?: number;
-    start?: stringOrDate;
-    end?: stringOrDate;
-    title?: string;
-  }) {
-    toast((t) => (
-      <div>
-        Usunąć &quot;{event.title}&quot;?
-        <Button
-          className="ml-4"
-          onClick={() => {
-            toast.dismiss(t.id);
-            setEvents((prev) => {
-              const prevStringified = prev.map((e) => JSON.stringify(e));
-              const idx = prevStringified.indexOf(JSON.stringify(event));
-              const events = [...prev];
-              events.splice(idx, 1);
-              return events;
-            });
-          }}
-        >
-          Usuń
-        </Button>
-      </div>
-    ));
-  }
-
-  function handleSelectSlot({
-    start,
-    end,
-  }: {
-    start: stringOrDate;
-    end: stringOrDate;
-  }) {
-    const title = window.prompt("Podaj nazwę wydarzenia");
-    if (title) {
-      setEvents((prev) => [...prev, { start, end, title }]);
-    }
-  }
-
-  function moveEvent({ event, start, end }: CalendarEvent) {
-    setEvents((prev) => {
-      const existing = prev.find((ev) => ev.id === event.id) ?? {};
-      const filtered = prev.filter((ev) => ev.id !== event.id);
-      return [...filtered, { ...existing, start, end }];
-    });
-  }
-
-  function resizeEvent({ event, start, end }: CalendarEvent) {
-    setEvents((prev) => {
-      const existing = prev.find((ev) => ev.id === event.id) ?? {};
-      const filtered = prev.filter((ev) => ev.id !== event.id);
-      return [...filtered, { ...existing, start, end }];
-    });
-  }
-
-  if (isLoading) return <Loader />;
+  const { mutateAsync: handleDelete } = useMutation({
+    mutationFn: deleteEvent,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["calendar"] });
+    },
+    onError: (err) => {
+      toast.error(err.message);
+    },
+  });
 
   return (
-    <div className="relative h-svh px-4 py-4">
-      <DnDCalendar
-        className="max-h-[93%]"
-        messages={{
-          week: "Tydzień",
-          work_week: "Tydzień roboczy",
-          day: "Dzień",
-          month: "Miesiąc",
-          previous: "Cofnij",
-          next: "Następny",
-          today: "Dziś",
-          agenda: "Plan",
-          date: "Data",
-          time: "Godzina",
-          event: "Wydarzenie",
-          showMore: (total) => `+${total} więciej`,
-        }}
-        defaultDate={new Date()}
-        defaultView="day"
-        events={events}
-        localizer={localizer}
-        culture="pl"
-        popup
-        selectable
-        resizable
-        allDayMaxRows={2}
-        onEventDrop={moveEvent}
-        onEventResize={resizeEvent}
-        onSelectSlot={handleSelectSlot}
-        onSelectEvent={handleSelectEvent}
-      />
-      <Button
-        onClick={() => {
-          void toast.promise(mutateAsync({ dietitianId, events }), {
-            loading: "Zapisywanie...",
-            success: "Sukces",
-            error: "Nie udało się zapisać kalendarza",
-          });
-        }}
-        className="ml-auto mt-4 block"
-      >
-        Zapisz
-      </Button>
+    <div className="relative z-0 mt-12 px-4 py-4 xl:mt-0">
+      <ThemeProvider theme={isDarkModeOn ? darkTheme : lightTheme}>
+        <Scheduler
+          hourFormat="24"
+          draggable={false}
+          getRemoteEvents={async () => {
+            const { data } = await refetch();
+            return data;
+          }}
+          onDelete={(eventId) => handleDelete(eventId)}
+          onConfirm={async (event) =>
+            await handleAddEdit({ dietitianId, event })
+          }
+          timeZone="CET"
+          locale={pl}
+          day={{
+            startHour: 7,
+            endHour: 21,
+            step: 60,
+            navigation: true,
+          }}
+          week={{
+            weekDays: [0, 1, 2, 3, 4, 5, 6],
+            weekStartOn: 1,
+            startHour: 7,
+            endHour: 21,
+            step: 60,
+            navigation: true,
+          }}
+          month={{
+            weekDays: [0, 1, 2, 3, 4, 5, 6],
+            weekStartOn: 1,
+            startHour: 7,
+            endHour: 21,
+            step: 60,
+            navigation: true,
+          }}
+          translations={{
+            navigation: {
+              month: "Miesiąc",
+              week: "Tydzień",
+              day: "Dzień",
+              today: "Dziś",
+              agenda: "Plan",
+            },
+            form: {
+              addTitle: "Dodaj wydarzenie",
+              editTitle: "Edytuj wydarzenie",
+              confirm: "Zapisz",
+              delete: "Usuń",
+              cancel: "Anuluj",
+            },
+            event: {
+              title: "Tytuł",
+              subtitle: "Podtytuł",
+              start: "Start",
+              end: "Koniec",
+              allDay: "Cały dzień",
+            },
+            validation: {
+              required: "Wymagane",
+              invalidEmail: "Niepoprawny e-mail",
+              onlyNumbers: "Tylko cyfry",
+              min: "Minimalnie 3 litery",
+              max: "Za dużo znaków",
+            },
+            moreEvents: "Więcej...",
+            noDataToDisplay: "Brak danych do wyświetlenia",
+            loading: "Ładowanie...",
+          }}
+        />
+      </ThemeProvider>
     </div>
   );
 }

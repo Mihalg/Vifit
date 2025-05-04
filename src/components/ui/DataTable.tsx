@@ -135,7 +135,7 @@ export function DataTable<T extends { id?: number | undefined }>({
           </span>
         </Button>
       </div>
-      <div className="rounded-md border">
+      <div>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

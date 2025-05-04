@@ -1,5 +1,8 @@
 import useDietitianId from "@/hooks/useDietitianId";
-import { addEditIngredient, getIngredientsList } from "@/services/apiIngredients";
+import {
+  addEditIngredient,
+  getIngredientsList,
+} from "@/services/apiIngredients";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeftIcon, ChevronDown } from "lucide-react";
@@ -10,6 +13,7 @@ import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import { Label } from "../ui/Label";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover";
+import { UseDarkModeContext } from "@/lib/utils";
 
 type AddIngredientPopoverProps = {
   append: UseFieldArrayAppend<
@@ -43,6 +47,7 @@ type FormFields = {
 function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
   const queryClient = useQueryClient();
   const id = useDietitianId();
+  const { isDarkModeOn } = UseDarkModeContext();
 
   const { data: ingredients } = useQuery({
     queryKey: ["ingredients"],
@@ -64,6 +69,7 @@ function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+  const [searchBar, setSearchBar] = useState("");
 
   const onSubmit: SubmitHandler<FormFields> = (data) => {
     mutate({ ingredient: data, dietitianId: id });
@@ -86,7 +92,9 @@ function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
         <span>Wybierz lub dodaj nową pozycję</span>
         <ChevronDown />
       </PopoverTrigger>
-      <PopoverContent className="w-[400px]">
+      <PopoverContent
+        className={`w-[400px] ${isDarkModeOn && "text-secondary-100"}`}
+      >
         {isFormOpen ? (
           <div>
             <form
@@ -109,6 +117,11 @@ function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
                   type="text"
                   required
                   disabled={isPending}
+                  className={
+                    isDarkModeOn
+                      ? "border-neutral-800 bg-neutral-600 ring-offset-neutral-950 file:text-neutral-50 placeholder:text-neutral-400 focus-visible:ring-neutral-300"
+                      : ""
+                  }
                 />
               </div>
               <div>
@@ -118,6 +131,11 @@ function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
                   disabled={isPending}
                   {...register("unit")}
                   type="text"
+                  className={
+                    isDarkModeOn
+                      ? "border-neutral-800 bg-neutral-600 ring-offset-neutral-950 file:text-neutral-50 placeholder:text-neutral-400 focus-visible:ring-neutral-300"
+                      : ""
+                  }
                 />
               </div>
               <div>
@@ -128,6 +146,11 @@ function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
                   {...register("category")}
                   type="text"
                   required
+                  className={
+                    isDarkModeOn
+                      ? "border-neutral-800 bg-neutral-600 ring-offset-neutral-950 file:text-neutral-50 placeholder:text-neutral-400 focus-visible:ring-neutral-300"
+                      : ""
+                  }
                 />
               </div>
               <div className="mt-4 flex justify-between">
@@ -144,7 +167,7 @@ function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
                 <Button
                   // eslint-disable-next-line @typescript-eslint/no-misused-promises
                   onClick={handleSubmit(onSubmit)}
-                  className="rounded-md bg-primary-600 px-4 py-2 font-medium text-primary-50 transition-colors hover:bg-primary-900"
+                  className="rounded-md bg-primary-600 px-4 py-2 font-medium text-primary-50 transition-colors hover:bg-primary-800"
                 >
                   Dodaj
                 </Button>
@@ -153,7 +176,18 @@ function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
           </div>
         ) : (
           <div>
-            <Input placeholder="Wyszukaj nazwę" />
+            <Input
+              value={searchBar}
+              onChange={(e) => {
+                setSearchBar(e.target.value);
+              }}
+              placeholder="Wyszukaj nazwę"
+              className={
+                isDarkModeOn
+                  ? "border-neutral-800 bg-neutral-600 ring-offset-neutral-950 file:text-neutral-50 placeholder:text-neutral-400 focus-visible:ring-neutral-300"
+                  : ""
+              }
+            />
             <div className="flex items-center justify-between gap-6 border-b-[1px] border-primary-100 px-1 py-2">
               <span>Wybierz składnik</span>
               <button
@@ -166,23 +200,26 @@ function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
               </button>
             </div>
             <div className="max-h-[200px] overflow-y-auto">
-              {ingredients?.map((ingredient, i) => (
-                <PopoverClose
-                  onClick={() => {
-                    const ingredientToAdd = {
-                      ...ingredient,
-                      quantity: 1,
-                    };
+              {ingredients?.map((ingredient, i) => {
+                if (ingredient.name.toLowerCase().includes(searchBar))
+                  return (
+                    <PopoverClose
+                      onClick={() => {
+                        const ingredientToAdd = {
+                          ...ingredient,
+                          quantity: 1,
+                        };
 
-                    append(ingredientToAdd);
-                  }}
-                  key={i}
-                  className="flex w-full cursor-pointer items-center justify-between rounded-sm px-2 py-1 transition-colors hover:bg-primary-50"
-                >
-                  <span className="text-start">{ingredient.name}</span>
-                  <span>{ingredient.category}</span>
-                </PopoverClose>
-              ))}
+                        append(ingredientToAdd);
+                      }}
+                      key={i}
+                      className={`flex w-full cursor-pointer items-center justify-between rounded-sm px-2 py-1 transition-colors ${isDarkModeOn ? "hover:bg-secondary-300" : "hover:bg-primary-50"}`}
+                    >
+                      <span className="text-start">{ingredient.name}</span>
+                      <span>{ingredient.category}</span>
+                    </PopoverClose>
+                  );
+              })}
             </div>
           </div>
         )}

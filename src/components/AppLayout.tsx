@@ -1,17 +1,19 @@
-import { useEffect } from "react";
+import { DarkModeContext } from "@/lib/utils";
+import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router";
 import { useAuth } from "../hooks/useAuth";
 import Loader from "./ui/Loader";
 
 function AppLayout() {
+  const [isDarkModeOn, setIsDarkModeOn] = useState(true);
   const { isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
   useEffect(() => {
-    void async function () {
+    void (async function () {
       if (!isAuthenticated && !isLoading) {
-        await navigate("/login");
+        await navigate("/");
       }
-    }();
+    })();
   }, [isAuthenticated, isLoading, navigate]);
 
   if (isLoading)
@@ -23,9 +25,11 @@ function AppLayout() {
 
   if (isAuthenticated)
     return (
-      <main>
-        <Outlet />
-      </main>
+      <DarkModeContext.Provider value={{ isDarkModeOn, setIsDarkModeOn }}>
+        <main className={isDarkModeOn ? "dark" : "light"}>
+          <Outlet />
+        </main>
+      </DarkModeContext.Provider>
     );
 }
 

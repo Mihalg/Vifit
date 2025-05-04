@@ -35,7 +35,7 @@ export default function Register() {
   };
 
   return (
-    <div className="flex h-dvh flex-col items-center justify-center gap-5 bg-secondary-600 px-4 py-2">
+    <div className="flex h-dvh flex-col items-center justify-center gap-5 bg-secondary-600 px-4 py-2 text-secondary-400">
       {succes ? (
         <div className="mx-auto max-w-96 rounded-md border bg-white px-5 py-4 text-center">
           <Logo className="mx-auto w-60" />
@@ -108,6 +108,19 @@ export default function Register() {
                     max={50}
                     disabled={isPending}
                   />
+                </div>
+
+                <div className="flex">
+                  <Input required type="checkbox" className="mr-4 h-6 w-6" />
+                  <Link to="/polityka-prywatnosci" className="underline">
+                    Akceptuję politykę prywatności
+                  </Link>
+                </div>
+                <div className="flex">
+                  <Input required type="checkbox" className="mr-4 h-6 w-6" />
+                  <Link to="/regulamin" className="underline">
+                    Akceptuję regulamin
+                  </Link>
                 </div>
 
                 <Button type="submit" className="w-full" disabled={isPending}>

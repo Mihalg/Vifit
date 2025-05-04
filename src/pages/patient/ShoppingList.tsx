@@ -40,7 +40,10 @@ function ShoppingList() {
           className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3 print:grid-cols-2 print:px-4"
         >
           {categoriesIngredients.map((category, i) => (
-            <div className="rounded-md bg-secondary-100 px-4 py-4" key={i}>
+            <div
+              className="rounded-md bg-secondary-100 px-4 py-4 print:border-[1px] print:bg-transparent dark:bg-secondary-400"
+              key={i}
+            >
               <p className="mb-3 text-2xl capitalize">{category.category}</p>
 
               <div className="space-y-2">

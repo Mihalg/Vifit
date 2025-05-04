@@ -18,12 +18,12 @@ function VisitsHistory() {
 
   return (
     <div className="grid grid-cols-1 lg:min-h-full lg:grid-cols-[15rem_1fr]">
-      <div className="px-6 py-4 lg:border-r-[1px]">
+      <div className="px-6 py-4 lg:border-r-[1px] lg:dark:border-r-secondary-400">
         <p className="mb-6 text-3xl">Historia Wizyt</p>
         <div className="scrollbar lg:max-h-[720px] lg:overflow-y-auto lg:px-1">
           {sortedAppointments?.map((appointment) => (
             <Link
-              className="mb-2 block w-full rounded-md bg-secondary-200 px-2 py-2 text-center"
+              className="mb-2 block w-full rounded-md bg-secondary-200 px-2 py-2 text-center dark:bg-secondary-400"
               key={appointment.id}
               to={String(appointment.id)}
             >

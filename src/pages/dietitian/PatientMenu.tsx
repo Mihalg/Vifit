@@ -5,13 +5,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/Popover";
+import useDietitianId from "@/hooks/useDietitianId";
 import { convertTime } from "@/lib/utils";
-import { getMealsList } from "@/services/apiMeals";
+import { addPatientMenu, getMealsList } from "@/services/apiMeals";
 import { getMenusList } from "@/services/apiMenus";
 import { PopoverClose } from "@radix-ui/react-popover";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { Link, Outlet, useLocation, useParams } from "react-router";
 
 export default function PatientMenu() {
@@ -29,7 +31,7 @@ export default function PatientMenu() {
 
   return (
     <>
-      <SelectMenuPopover />
+      <SelectMenuPopover patientId={patientId} />
       {data ? (
         <div className="grid grid-cols-1 gap-4 px-4 py-2">
           {data.map((meal, i) => {
@@ -37,18 +39,11 @@ export default function PatientMenu() {
               <Link
                 to={String(meal.id)}
                 key={i}
-                className="grid grid-cols-1 gap-4 rounded-md bg-primary-600 px-2 py-2 text-center text-xl text-white transition-colors hover:bg-primary-800 lg:grid-cols-2"
+                className="flex justify-around gap-4 rounded-md bg-primary-600 px-2 py-2 text-center text-xl text-white transition-colors hover:bg-primary-800"
               >
-                <div className="flex justify-around">
-                  <p>{meal.name}</p>
-                  <p>Godzina: {convertTime(meal.time)}</p>
-                  <p>Kcal: {meal.calories}</p>
-                </div>
-                <div className="flex justify-around">
-                  <p>W: {meal.carbs}</p>
-                  <p>T: {meal.fat}</p>
-                  <p>B: {meal.proteins}</p>
-                </div>
+                <p>{meal.name}</p>
+                <p>Godzina: {convertTime(meal.time)}</p>
+                <p>Kcal: {meal.calories}</p>
               </Link>
             );
           })}
@@ -64,17 +59,22 @@ export default function PatientMenu() {
   );
 }
 
-function SelectMenuPopover() {
+function SelectMenuPopover({ patientId }: { patientId: string | undefined }) {
   const [searchBar, setSearchBar] = useState("");
+  const dietitianId = useDietitianId();
+  const queryClient = useQueryClient();
 
   const { data: menus } = useQuery({
-    queryKey: ["menus"],
+    queryKey: ["menusList"],
     queryFn: getMenusList,
   });
 
-  // const { mutate } = useMutation({
-  //   mutationFn: addPatientMenu,
-  // });
+  const { mutateAsync } = useMutation({
+    mutationFn: addPatientMenu,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ["meals", patientId] });
+    },
+  });
 
   return (
     <Popover modal={true}>
@@ -104,6 +104,20 @@ function SelectMenuPopover() {
                 if (menu.name.toLowerCase().includes(searchBar)) {
                   return (
                     <PopoverClose
+                      onClick={() => {
+                        void toast.promise(
+                          mutateAsync({
+                            menuId: menu.id,
+                            patientId,
+                            dietitianId,
+                          }),
+                          {
+                            loading: "Ładowanie...",
+                            success: "Sukces",
+                            error: "Nie udało się przypisać jadłospisu.",
+                          },
+                        );
+                      }}
                       title={menu.name}
                       key={i}
                       className="flex w-full cursor-pointer items-center justify-between rounded-sm px-2 py-1 transition-colors hover:bg-primary-50"
@@ -121,6 +135,20 @@ function SelectMenuPopover() {
               } else
                 return (
                   <PopoverClose
+                    onClick={() => {
+                      void toast.promise(
+                        mutateAsync({
+                          menuId: menu.id,
+                          patientId,
+                          dietitianId,
+                        }),
+                        {
+                          loading: "Ładowanie...",
+                          success: "Sukces",
+                          error: (err: Error) => err.message,
+                        },
+                      );
+                    }}
                     title={menu.name}
                     key={i}
                     className="flex w-full cursor-pointer items-center justify-between rounded-sm px-2 py-1 transition-colors hover:bg-primary-50"

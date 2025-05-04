@@ -1,63 +1,93 @@
-import { stringOrDate } from "react-big-calendar";
+import { ReactNode } from "react";
 import supabase from "./supabase";
+import { ProcessedEvent } from "@aldabil/react-scheduler/types";
 
 export async function getCalendar() {
   const { data, error } = await supabase
     .from("planned_appointments")
-    .select("id, start, end, title");
+    .select("id, start, end, title, subtitle");
 
   if (error) throw new Error("Wystąpił błąd");
 
   const planned_appointments = data.map((item) => {
     return {
-      ...item,
+      event_id: item.id,
       start: new Date(item.start),
       end: new Date(item.end),
+      title: item.title,
+      subtitle: item.subtitle,
     };
   });
 
   return planned_appointments;
 }
 
-export async function editCalendar({
+export async function createEditEvent({
   dietitianId,
-  events,
+  event,
 }: {
   dietitianId: string | undefined;
-  events: {
-    id?: number;
-    start: stringOrDate;
-    end: stringOrDate;
-    title?: string;
-  }[];
-}) {
-  if (!dietitianId) throw new Error("Nie udało się zapsiać kalendarza");
+  event: {
+    event_id?: number | string;
+    start: Date;
+    end: Date;
+    title: ReactNode;
+    subtitle?: ReactNode;
+  };
+}): Promise<ProcessedEvent> {
+  if (!dietitianId) throw new Error("Wystąpił błąd. Spróbuj ponownie później");
 
-  const { error: deleteError } = await supabase
+  if (!event.event_id) {
+    delete event.event_id;
+    //ADD
+    const { data, error } = await supabase
+      .from("planned_appointments")
+      .insert({ dietitian_id: dietitianId, ...event })
+      .select()
+      .single();
+
+    if (error) {
+      console.log(error);
+      throw new Error("Wystąpił błąd. Nie udało się dodać wydarzenia.");
+    } else {
+      return {
+        event_id: data.id,
+        start: event.start,
+        end: event.end,
+        title: data.title,
+        subtitle: data.subtitle,
+      };
+    }
+  } else {
+    console.log(event);
+    const { error } = await supabase
+      .from("planned_appointments")
+      .update({
+        start: event.start,
+        end: event.end,
+        title: event.title,
+        subtitle: event.subtitle,
+      })
+      .eq("id", +event.event_id);
+
+    if (error) {
+      console.log(error);
+      throw new Error("Wystąpił błąd. Nie udało się edytować wydarzenia.");
+    } else {
+      return event as ProcessedEvent;
+    }
+  }
+}
+
+export async function deleteEvent(eventId: string | number) {
+  const { error } = await supabase
     .from("planned_appointments")
     .delete()
-    .eq("dietitian_id", dietitianId);
-
-  if (deleteError) {
-    console.log(deleteError);
-    throw new Error("Nie udało się zapsiać kalendarza");
-  }
-
-  const eventsToAdd = events.map((event) => {
-    return {
-      start: String(event.start),
-      end: String(event.end),
-      title: event.title,
-      dietitian_id: dietitianId,
-    };
-  });
-
-  const { error: addError } = await supabase
-    .from("planned_appointments")
-    .insert(eventsToAdd);
-
-  if (addError) {
-    console.log(addError);
-    throw new Error("Nie udało się zapsiać kalendarza");
+    .eq("id", +eventId);
+  if (error) {
+    console.log(error);
+    throw new Error("Wystąpił błąd. Nie udało się usunąć wydarzenia.");
+  } else {
+    return eventId;
   }
 }

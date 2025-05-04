@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
+import { createContext, Dispatch, SetStateAction, useContext } from "react";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -156,3 +157,22 @@ export function sumIngredients(
 
   return Object.values(ingredientTotals);
 }
+
+type DarkModeContext = {
+  isDarkModeOn: boolean;
+  setIsDarkModeOn: Dispatch<SetStateAction<boolean>>;
+};
+
+export const DarkModeContext = createContext<DarkModeContext | null>(null);
+
+export const UseDarkModeContext = () => {
+  const context = useContext(DarkModeContext);
+
+  if (!context) {
+    throw new Error(
+      "UseDarkModeContext has to be used within <UseDarkModeContext.Provider>",
+    );
+  }
+
+  return context;
+};

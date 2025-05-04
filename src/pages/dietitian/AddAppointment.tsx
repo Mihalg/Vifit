@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/Textarea";
 import { addAppointment } from "@/services/apiAppointments";
 import { Label } from "@radix-ui/react-label";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -72,6 +73,7 @@ function AddAppointment() {
           {...register("age")}
           id="age"
           type="number"
+          min={0}
         />
       </div>
 
@@ -83,6 +85,7 @@ function AddAppointment() {
           {...register("weight")}
           id="weight"
           type="number"
+          min={0}
         />
       </div>
 
@@ -94,6 +97,7 @@ function AddAppointment() {
           {...register("height")}
           id="height"
           type="number"
+          min={0}
         />
       </div>
 
@@ -102,7 +106,7 @@ function AddAppointment() {
         <select
           {...register("pal")}
           id="pal"
-          className="h-[40px] rounded-md border-[1px] border-neutral-200 bg-white px-3 py-2"
+          className="h-[40px] rounded-md border-[1px] border-neutral-200 bg-white px-3 py-2 dark:border-none dark:border-neutral-800 dark:bg-neutral-600 dark:ring-offset-neutral-950 dark:file:text-neutral-50 dark:placeholder:text-neutral-400 dark:focus-visible:ring-neutral-300"
         >
           <option value={1.2}>
             Brak aktywności fizycznej, siedziący tryb życia
@@ -126,6 +130,7 @@ function AddAppointment() {
           {...register("water_weight")}
           id="waterWeight"
           type="number"
+          min={0}
         />
       </div>
       <div>
@@ -135,6 +140,7 @@ function AddAppointment() {
           {...register("fat_weight")}
           id="fatWeight"
           type="number"
+          min={0}
         />
       </div>
       <div>
@@ -144,6 +150,7 @@ function AddAppointment() {
           disabled={isPending}
           id="muscleWeight"
           type="number"
+          min={0}
         />
       </div>
 
@@ -153,12 +160,7 @@ function AddAppointment() {
       </div>
       <div>
         <Label htmlFor="notes">Notatki</Label>
-        <Input
-          disabled={isPending}
-          {...register("notes")}
-          id="notes"
-          type="text"
-        />
+        <Textarea disabled={isPending} {...register("notes")} id="notes" />
       </div>
 
       <Button disabled={isPending} className="ml-auto mt-auto w-40">

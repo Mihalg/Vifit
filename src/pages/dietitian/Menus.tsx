@@ -154,7 +154,7 @@ const columns: ColumnDef<Menu>[] = [
         return (
           <DataTableMenu
             id={+row.original.id}
-            queryKey="menus"
+            queryKey="menusList"
             deleteFn={deleteMenu}
             duplicateFn={duplicateMenu}
           />

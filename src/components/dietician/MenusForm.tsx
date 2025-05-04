@@ -84,7 +84,7 @@ export default function MenusForm() {
     const { mutate } = useMutation({
       mutationFn: addEditMenu,
       onSuccess: async () => {
-        await queryClient.invalidateQueries({ queryKey: ["menus"] });
+        await queryClient.invalidateQueries({ queryKey: ["menusList"] });
         toast.success("Sukces!");
         await moveBack();
         reset();
@@ -148,12 +148,12 @@ export default function MenusForm() {
             </div>
           </div>
           <div className="flex items-center gap-8">
-            <p className="text-3xl text-primary-600 lg:text-4xl">Posiłki</p>
+            <p className="text-3xl text-primary-600 lg:text-4xl dark:text-secondary-100">Posiłki</p>
           </div>
           {fields.map((field, i) => (
             <div
               key={field.id}
-              className="flex flex-col gap-6 rounded-md border px-4 py-4 shadow-md"
+              className="flex flex-col gap-6 rounded-md border px-4 py-4 shadow-md dark:border-secondary-300"
             >
               <div className="flex flex-col gap-4 lg:flex-row">
                 <div className="grow">
@@ -244,7 +244,7 @@ function NestedDishesForm({
   return (
     <div className="flex flex-col">
       <div className="flex gap-6">
-        <p className="text-xl text-primary-600 lg:text-2xl">
+        <p className="text-xl text-primary-600 lg:text-2xl dark:text-secondary-100">
           Pozycje wchodzące w skład posiłku
         </p>
         <AddDishPopover append={appendDish} />

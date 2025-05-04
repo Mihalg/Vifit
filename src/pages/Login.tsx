@@ -34,7 +34,7 @@ function Login() {
   const { mutate: recover, isPending: isRecovering } = useMutation({
     mutationFn: recoverPassword,
     onSuccess: async () => {
-      await navigate("/login");
+      await navigate("/");
       toast.success("Wysłaliśmy wiadomość na podany adres.");
     },
     onError: (err) => {
@@ -55,9 +55,8 @@ function Login() {
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!email || !password) return;
-
     if (!forgotPassword) {
+      if (!email || !password) return;
       mutate(
         { email, password },
         {
@@ -68,13 +67,14 @@ function Login() {
         },
       );
     } else {
+      if (!email) return;
       recover(email);
     }
   }
 
   if (!isAuthenticated)
     return (
-      <div className="flex h-dvh flex-col items-center justify-center gap-5 bg-secondary-600">
+      <div className="flex h-dvh flex-col items-center justify-center gap-5 bg-secondary-600 text-secondary-400">
         <div className="relative mx-auto min-w-80 rounded-md border bg-white px-5 py-4">
           {forgotPassword ? (
             <>
@@ -174,7 +174,7 @@ function Login() {
                       disabled={isPending}
                     />
                   </div>
-                  <Button type="submit" className="w-full"  disabled={isPending}>
+                  <Button type="submit" className="w-full" disabled={isPending}>
                     {isPending ? "Ładowanie..." : "Zaloguj się"}
                   </Button>
                 </div>

@@ -18,9 +18,6 @@ type FormFields = {
   name: string;
   time: string;
   calories: number;
-  carbs: number;
-  fat: number;
-  proteins: number;
   meal_dishes: {
     id: number;
     name: string;
@@ -43,9 +40,6 @@ function MealForm() {
       name: "",
       time: "",
       calories: 0,
-      carbs: 0,
-      fat: 0,
-      proteins: 0,
     },
   });
 
@@ -114,23 +108,6 @@ function MealForm() {
               type="number"
               required
               {...register("calories")}
-            />
-          </div>
-          <div>
-            <Label htmlFor="carbs">Węglowodany +-</Label>
-            <Input id="carbs" type="number" required {...register("carbs")} />
-          </div>
-          <div>
-            <Label htmlFor="fat">Tłuszcze +-</Label>
-            <Input id="fat" type="number" required {...register("fat")} />
-          </div>
-          <div>
-            <Label htmlFor="proteins">Białko +-</Label>
-            <Input
-              id="proteins"
-              type="number"
-              required
-              {...register("proteins")}
             />
           </div>
         </div>

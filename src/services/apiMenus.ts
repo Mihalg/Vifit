@@ -206,7 +206,6 @@ export async function duplicateMenu(id: number) {
   const dishesToDuplicate = menu.dishes_menus.map((menu) => {
     return { ...menu, menu_id: data.id };
   });
-  console.log(dishesToDuplicate);
 
   const { error: addDishesError } = await supabase
     .from("dishes_menus")

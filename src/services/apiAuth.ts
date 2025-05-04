@@ -43,7 +43,7 @@ export async function login({
   if (error) {
     if (error.status === 400) {
       throw new Error("Niepoprawne dane logowania");
-    } else throw new Error(`Nie udało się zalogować ${error.status}`);
+    } else throw new Error(`Nie udało się zalogować (${error.status})`);
   }
 
   const role = await getUserRole(data.user.id);

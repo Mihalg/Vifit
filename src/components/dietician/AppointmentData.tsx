@@ -136,7 +136,7 @@ function AppointmentForm({ data }: AppointmentFormProps) {
             {...register("pal")}
             defaultValue={data.pal}
             id="pal"
-            className="h-[40px] rounded-md border-[1px] border-neutral-200 bg-white px-3 py-2"
+            className="h-[40px] rounded-md border-[1px] border-neutral-200 bg-white px-3 py-2 dark:border-none dark:border-neutral-800 dark:bg-neutral-600 dark:ring-offset-neutral-950 dark:file:text-neutral-50 dark:placeholder:text-neutral-400 dark:focus-visible:ring-neutral-300"
           >
             <option value={1.2}>
               Brak aktywności fizycznej, siedziący tryb życia

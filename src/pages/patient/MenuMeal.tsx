@@ -26,8 +26,6 @@ function MenuMeal({ meal }: MenuMealProps) {
     setIsModalOpen(false);
   });
 
-  
-
   const [selectedDish, setSelectedDish] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -38,9 +36,9 @@ function MenuMeal({ meal }: MenuMealProps) {
       >
         <div
           ref={ref}
-          className={`absolute left-1/2 top-1/2 flex max-h-[75%] w-3/4 -translate-x-1/2 -translate-y-1/2 flex-col items-start rounded-md border bg-secondary-50 px-8 py-4 lg:w-fit`}
+          className={`absolute left-1/2 top-1/2 flex max-h-[75%] w-3/4 -translate-x-1/2 -translate-y-1/2 flex-col items-start rounded-md bg-secondary-50 px-8 py-4 dark:border-none dark:bg-secondary-500 lg:w-fit`}
         >
-          <div className="w-full divide-y-2 overflow-y-auto">
+          <div className="w-full divide-y-2 overflow-y-auto divide-primary-600">
             {meal.meal_dishes.map((dish, i) => (
               <button
                 className="w-full px-2 py-2 text-left text-lg transition-colors hover:bg-primary-600 hover:text-white"
@@ -65,7 +63,7 @@ function MenuMeal({ meal }: MenuMealProps) {
         </div>
       </div>
 
-      <div className="mb-4 rounded-md bg-secondary-100 px-4 py-4">
+      <div className="mb-4 rounded-md bg-secondary-100 px-4 py-4 dark:bg-secondary-500">
         <div className="flex flex-col items-center gap-4 text-3xl md:flex-row">
           <div className="flex gap-4">
             <p>{meal.name}</p>
@@ -82,7 +80,7 @@ function MenuMeal({ meal }: MenuMealProps) {
         </div>
 
         <div>
-          <p className="my-3 text-2xl text-primary-800">
+          <p className="my-3 text-2xl text-primary-600 dark:text-primary-50">
             {meal.meal_dishes.at(selectedDish)?.dish_id.name}
           </p>
 

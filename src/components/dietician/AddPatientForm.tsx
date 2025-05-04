@@ -45,7 +45,7 @@ function AddPatientForm() {
       </Button>
       <form
         onSubmit={handleSubmit}
-        className={`${isOpen ? "max-h-[200px] py-2" : "max-h-0"} space-y-2 overflow-hidden rounded-md bg-secondary-100 px-2 py-0 transition-all`}
+        className={`${isOpen ? "max-h-[200px] py-2" : "max-h-0"} space-y-2 overflow-hidden rounded-md bg-secondary-100 px-2 py-0 transition-all dark:bg-secondary-500`}
       >
         <Input
           value={email}
