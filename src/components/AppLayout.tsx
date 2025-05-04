@@ -5,7 +5,7 @@ import { useAuth } from "../hooks/useAuth";
 import Loader from "./ui/Loader";
 
 function AppLayout() {
-  const [isDarkModeOn, setIsDarkModeOn] = useState(true);
+  const [isDarkModeOn, setIsDarkModeOn] = useState(false);
   const { isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
   useEffect(() => {
