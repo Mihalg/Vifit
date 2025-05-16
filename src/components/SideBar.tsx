@@ -10,9 +10,7 @@ export default function SideBar({ children }: { children: ReactNode }) {
   }
 
   return (
-    <div
-      className={`${isActive ? "fixed" : ""} z-10 flex h-0 w-full items-center justify-between lg:static xl:h-dvh xl:w-fit xl:flex-col xl:border-r-[1px] xl:border-r-primary-50 dark:xl:border-r-secondary-400`}
-    >
+    <div className="z-10 flex h-0 w-full flex-col items-center justify-between lg:static xl:h-dvh xl:w-fit xl:border-r-[1px] xl:border-r-primary-50 dark:xl:border-r-secondary-400">
       <Hamburger onClick={toggleMenu} isActive={isActive} />
       <MainNav isActive={isActive} toggleMenu={toggleMenu}>
         {children}

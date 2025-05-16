@@ -48,5 +48,5 @@ export default function useMenuToEdit(menuId: string | undefined) {
     };
 
     return { menu, isLoading };
-  } else return { menu: null, isLoading };
+  } else return { menu: undefined, isLoading };
 }

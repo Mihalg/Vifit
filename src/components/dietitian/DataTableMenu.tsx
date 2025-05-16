@@ -27,19 +27,18 @@ function DataTableMenu({ id, queryKey, deleteFn, duplicateFn }: Props) {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [queryKey] });
     },
-  
   });
 
   return (
     <div className="ml-auto flex w-fit space-x-2 text-right">
       <Button
-       onClick={() => {
-        void toast.promise(duplicate(id), {
-          loading: "Duplikowanie...",
-          success: "Sukces",
-          error: "Nie udało się zduplikować pozycji.",
-        });
-      }}
+        onClick={() => {
+          void toast.promise(duplicate(id), {
+            loading: "Duplikowanie...",
+            success: "Sukces",
+            error: (err: Error) => err.message,
+          });
+        }}
         title="Duplikuj"
       >
         <CopyIcon />

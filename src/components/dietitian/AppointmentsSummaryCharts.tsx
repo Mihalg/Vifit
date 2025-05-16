@@ -38,9 +38,9 @@ function AppointmentsSummaryCharts({
   });
 
   return (
-    <div className="flex h-dvh flex-col xl:h-full">
+    <div className="flex h-[85dvh] flex-col">
       <p className="text-center text-xl lg:text-2xl">Masa ciała</p>
-      <ResponsiveContainer width="100%" height="20%" >
+      <ResponsiveContainer width="100%" height="20%">
         <AreaChart
           data={formatedData}
           margin={{

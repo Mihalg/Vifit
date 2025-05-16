@@ -1,3 +1,4 @@
+import { UseDarkModeContext } from "@/components/ThemeProvider";
 import { Input } from "@/components/ui/Input";
 import Loader from "@/components/ui/Loader";
 import {
@@ -63,6 +64,7 @@ function SelectMenuPopover({ patientId }: { patientId: string | undefined }) {
   const [searchBar, setSearchBar] = useState("");
   const dietitianId = useDietitianId();
   const queryClient = useQueryClient();
+  const { isDarkModeOn } = UseDarkModeContext();
 
   const { data: menus } = useQuery({
     queryKey: ["menusList"],
@@ -78,11 +80,13 @@ function SelectMenuPopover({ patientId }: { patientId: string | undefined }) {
 
   return (
     <Popover modal={true}>
-      <PopoverTrigger className="text-primary-950 mx-4 my-2 flex items-end gap-1 text-lg md:text-xl">
+      <PopoverTrigger className="text-primary-950 w-fit mx-4 my-2 flex items-end gap-1 text-lg md:text-xl">
         <span>Wybierz gotowy jadłospis</span>
         <ChevronDown />
       </PopoverTrigger>
-      <PopoverContent className="w-[350px] lg:w-[500px]">
+      <PopoverContent
+        className={`w-[350px] lg:w-[500px] ${isDarkModeOn ? "text-secondary-100" : ""}`}
+      >
         <div>
           <Input
             value={searchBar}
@@ -90,6 +94,11 @@ function SelectMenuPopover({ patientId }: { patientId: string | undefined }) {
               setSearchBar(e.target.value);
             }}
             placeholder="Wyszukaj nazwę"
+            className={
+              isDarkModeOn
+                ? "border-neutral-800 bg-neutral-600 ring-offset-neutral-950 file:text-neutral-50 placeholder:text-neutral-400 focus-visible:ring-neutral-300"
+                : ""
+            }
           />
           <div className="flex w-full items-center justify-between rounded-sm px-2 py-1">
             <span className="w-[150px]">Nazwa</span>
@@ -100,39 +109,7 @@ function SelectMenuPopover({ patientId }: { patientId: string | undefined }) {
           </div>
           <div className="max-h-[200px] overflow-y-auto">
             {menus?.map((menu, i) => {
-              if (searchBar) {
-                if (menu.name.toLowerCase().includes(searchBar)) {
-                  return (
-                    <PopoverClose
-                      onClick={() => {
-                        void toast.promise(
-                          mutateAsync({
-                            menuId: menu.id,
-                            patientId,
-                            dietitianId,
-                          }),
-                          {
-                            loading: "Ładowanie...",
-                            success: "Sukces",
-                            error: "Nie udało się przypisać jadłospisu.",
-                          },
-                        );
-                      }}
-                      title={menu.name}
-                      key={i}
-                      className="flex w-full cursor-pointer items-center justify-between rounded-sm px-2 py-1 transition-colors hover:bg-primary-50"
-                    >
-                      <span className="w-[150px] overflow-clip text-ellipsis text-nowrap text-start">
-                        {menu.name}
-                      </span>
-                      <span>{menu.calories}</span>
-                      <span>{menu.carbs}</span>
-                      <span>{menu.fat}</span>
-                      <span>{menu.proteins}</span>
-                    </PopoverClose>
-                  );
-                }
-              } else
+              if (menu.name.toLowerCase().includes(searchBar.toLowerCase())) {
                 return (
                   <PopoverClose
                     onClick={() => {
@@ -145,13 +122,13 @@ function SelectMenuPopover({ patientId }: { patientId: string | undefined }) {
                         {
                           loading: "Ładowanie...",
                           success: "Sukces",
-                          error: (err: Error) => err.message,
+                          error: "Nie udało się przypisać jadłospisu.",
                         },
                       );
                     }}
                     title={menu.name}
                     key={i}
-                    className="flex w-full cursor-pointer items-center justify-between rounded-sm px-2 py-1 transition-colors hover:bg-primary-50"
+                    className={`flex w-full cursor-pointer items-center justify-between rounded-sm px-2 py-1 transition-colors ${isDarkModeOn ? "hover:bg-secondary-300" : "hover:bg-primary-50"}`}
                   >
                     <span className="w-[150px] overflow-clip text-ellipsis text-nowrap text-start">
                       {menu.name}
@@ -162,6 +139,7 @@ function SelectMenuPopover({ patientId }: { patientId: string | undefined }) {
                     <span>{menu.proteins}</span>
                   </PopoverClose>
                 );
+              }
             })}
           </div>
         </div>

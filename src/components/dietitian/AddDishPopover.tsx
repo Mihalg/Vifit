@@ -7,11 +7,9 @@ import { useState } from "react";
 import { UseFieldArrayAppend } from "react-hook-form";
 import { Input } from "../ui/Input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover";
-import { UseDarkModeContext } from "@/lib/utils";
+import { UseDarkModeContext } from "../ThemeProvider";
 
-type AddDishPopoverProps = {
-  append: UseFieldArrayAppend<any>;
-};
+type AddDishPopoverProps = { append: UseFieldArrayAppend<any> };
 
 function AddDishPopover({ append }: AddDishPopoverProps) {
   const [searchBar, setSearchBar] = useState("");
@@ -28,22 +26,20 @@ function AddDishPopover({ append }: AddDishPopoverProps) {
         <span>Wybierz nową pozycję</span>
         <ChevronDown />
       </PopoverTrigger>
-      <PopoverContent className="w-[350px] text-secondary-100 lg:w-[500px]">
-        <div>
+      <PopoverContent className="w-[350px] overflow-x-auto dark:text-secondary-100 lg:w-[550px]">
+        <div className="min-w-[500px]">
           <Input
             value={searchBar}
             onChange={(e) => {
               setSearchBar(e.target.value);
             }}
             placeholder="Wyszukaj nazwę"
-            className={
-              isDarkModeOn
-                ? "border-neutral-800 bg-neutral-600 ring-offset-neutral-950 file:text-neutral-50 placeholder:text-neutral-400 focus-visible:ring-neutral-300"
-                : ""
-            }
+            // className="dark:border-neutral-800 bg-neutral-600 ring-offset-neutral-950 file:text-neutral-50 placeholder:text-neutral-400 focus-visible:ring-neutral-300"
           />
-          <div className="flex w-full items-center justify-between rounded-sm px-2 py-1">
-            <span className="w-[150px]">Nazwa</span>
+          <div className="grid w-full grid-cols-[120px_0.6fr_0.45fr_0.22fr_0.15fr_0.15fr_0.15fr] rounded-sm px-2 py-1 text-center">
+            <span className="text-left">Nazwa</span>
+            <span>Grupa</span>
+            <span>Kategoria</span>
             <span>Kcal</span>
             <span>W</span>
             <span>T</span>
@@ -51,7 +47,7 @@ function AddDishPopover({ append }: AddDishPopoverProps) {
           </div>
           <div className="max-h-[200px] overflow-y-auto">
             {dishes?.map((dish, i) => {
-              if (dish.name.toLowerCase().includes(searchBar))
+              if (dish.name.toLowerCase().includes(searchBar.toLowerCase()))
                 return (
                   <PopoverClose
                     title={dish.name}
@@ -59,11 +55,13 @@ function AddDishPopover({ append }: AddDishPopoverProps) {
                       append(dish);
                     }}
                     key={i}
-                    className={`flex w-full cursor-pointer items-center justify-between rounded-sm px-2 py-1 transition-colors ${isDarkModeOn ? "hover:bg-secondary-300" : "hover:bg-primary-50"}`}
+                    className={`grid items-center w-full cursor-pointer grid-cols-[120px_0.6fr_0.45fr_0.22fr_0.15fr_0.15fr_0.15fr] rounded-sm px-2 py-1 transition-colors ${isDarkModeOn ? "hover:bg-secondary-300" : "hover:bg-primary-50"}`}
                   >
-                    <span className="w-[150px] overflow-clip text-ellipsis text-nowrap text-start">
+                    <span className=" overflow-clip text-ellipsis text-nowrap text-start">
                       {dish.name}
                     </span>
+                    <span>{dish.group}</span>
+                    <span>{dish.category}</span>
                     <span>{dish.calories}</span>
                     <span>{dish.carbs}</span>
                     <span>{dish.fat}</span>

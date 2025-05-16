@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Label } from "@/components/ui/Label";
-import Logo from "@/components/ui/Logo";
 import { registerUser } from "@/services/apiAuth";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
@@ -9,12 +8,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Link } from "react-router";
 
-type FormFields = {
-  email: "";
-  password: "";
-  full_name: "";
-  sex: "";
-};
+type FormFields = { email: ""; password: ""; full_name: ""; sex: "" };
 
 export default function Register() {
   const { register, handleSubmit } = useForm<FormFields>();
@@ -37,14 +31,19 @@ export default function Register() {
   return (
     <div className="flex h-dvh flex-col items-center justify-center gap-5 bg-secondary-600 px-4 py-2 text-secondary-400">
       {succes ? (
-        <div className="mx-auto max-w-96 rounded-md border bg-white px-5 py-4 text-center">
-          <Logo className="mx-auto w-60" />
-          <p className="my-2 text-3xl">Dziękujemy za rejestrację!</p>
-          <p className="text-lg">Sukces! Twoje konto zostało zarejestrowane.</p>
+        <div className="mx-auto max-w-96 rounded-md border bg-white px-5 py-4 text-center lg:max-w-none">
+          <img src="/logo-dark.png" alt="Logo" className="mx-auto w-60" />
+          <p className="my-2 text-3xl lg:text-4xl">
+            Dziękujemy za rejestrację!
+          </p>
+          <p className="text-xl">
+            Wysłaliśmy Ci wiadomość e-mail w celu potwierdzenia rejestracji.
+          </p>
+          <p className="">Pamiętaj, aby sprawdzić spam.</p>
 
           <Link
             to="/"
-            className="mx-auto mt-2 block h-10 w-fit rounded-sm bg-primary-600 px-4 py-2 text-neutral-50 transition-colors hover:bg-primary-600/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2"
+            className="mx-auto mt-4 block h-10 w-fit rounded-sm bg-primary-600 px-4 py-2 text-neutral-50 transition-colors hover:bg-primary-600/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-600 focus-visible:ring-offset-2"
           >
             Zaloguj się
           </Link>
@@ -68,7 +67,7 @@ export default function Register() {
                     id="fullName"
                     type="text"
                     required
-                    max={50}
+                    maxLength={50}
                     disabled={isPending}
                   />
                 </div>
@@ -91,7 +90,7 @@ export default function Register() {
                     id="email"
                     type="email"
                     required
-                    max={50}
+                    maxLength={50}
                     disabled={isPending}
                   />
                 </div>
@@ -104,8 +103,8 @@ export default function Register() {
                     id="password"
                     type="password"
                     required
-                    min={8}
-                    max={50}
+                    minLength={8}
+                    maxLength={50}
                     disabled={isPending}
                   />
                 </div>

@@ -2,6 +2,8 @@ import useDietitianId from "@/hooks/useDietitianId";
 import {
   addEditIngredient,
   getIngredientsList,
+  getUniqueIngredientsCategories,
+  getUniqueUnitsList,
 } from "@/services/apiIngredients";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -10,16 +12,17 @@ import { useState } from "react";
 import { SubmitHandler, UseFieldArrayAppend, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Button } from "../ui/Button";
+import ComboInput from "../ui/ComboInput";
 import { Input } from "../ui/Input";
 import { Label } from "../ui/Label";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover";
-import { UseDarkModeContext } from "@/lib/utils";
 
 type AddIngredientPopoverProps = {
   append: UseFieldArrayAppend<
     {
       name: string;
       category: string;
+      group: string;
       calories: number;
       carbs: number;
       fat: number;
@@ -29,6 +32,10 @@ type AddIngredientPopoverProps = {
         name: string;
         unit: string;
         category: string;
+        calories: number;
+        carbs: number;
+        proteins: number;
+        fat: number;
         quantity: number;
         quantity_in_words: string;
       }[];
@@ -42,12 +49,15 @@ type FormFields = {
   name: string;
   category: string;
   unit: string;
+  calories: number;
+  carbs: number;
+  proteins: number;
+  fat: number;
 };
 
 function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
   const queryClient = useQueryClient();
   const id = useDietitianId();
-  const { isDarkModeOn } = UseDarkModeContext();
 
   const { data: ingredients } = useQuery({
     queryKey: ["ingredients"],
@@ -65,7 +75,7 @@ function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
     },
   });
 
-  const { handleSubmit, register, reset } = useForm<FormFields>();
+  const { handleSubmit, register, reset, control } = useForm<FormFields>();
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
@@ -92,11 +102,9 @@ function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
         <span>Wybierz lub dodaj nową pozycję</span>
         <ChevronDown />
       </PopoverTrigger>
-      <PopoverContent
-        className={`w-[400px] ${isDarkModeOn && "text-secondary-100"}`}
-      >
+      <PopoverContent className="w-[375px] overflow-x-auto dark:text-secondary-100 lg:w-[450px]">
         {isFormOpen ? (
-          <div>
+          <div >
             <form
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
@@ -117,41 +125,73 @@ function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
                   type="text"
                   required
                   disabled={isPending}
-                  className={
-                    isDarkModeOn
-                      ? "border-neutral-800 bg-neutral-600 ring-offset-neutral-950 file:text-neutral-50 placeholder:text-neutral-400 focus-visible:ring-neutral-300"
-                      : ""
-                  }
                 />
               </div>
-              <div>
-                <Label htmlFor="unit">Jednostka miary</Label>
-                <Input
-                  id="unit"
-                  disabled={isPending}
-                  {...register("unit")}
-                  type="text"
-                  className={
-                    isDarkModeOn
-                      ? "border-neutral-800 bg-neutral-600 ring-offset-neutral-950 file:text-neutral-50 placeholder:text-neutral-400 focus-visible:ring-neutral-300"
-                      : ""
-                  }
-                />
+              <div className="flex gap-2">
+                <div className="grow">
+                  <Label htmlFor="category">Kategoria</Label>
+                  <ComboInput
+                    control={control}
+                    register={register}
+                    inputId="category"
+                    queryFunction={getUniqueIngredientsCategories}
+                    queryKey="ingredientsCategories"
+                  />
+                </div>
+                <div className="grow">
+                  <Label htmlFor="unit">Jednostka</Label>
+                  <ComboInput
+                    control={control}
+                    register={register}
+                    inputId="unit"
+                    queryFunction={getUniqueUnitsList}
+                    queryKey="unitsList"
+                  />
+                </div>
               </div>
-              <div>
-                <Label htmlFor="category">Kategoria</Label>
-                <Input
-                  id="category"
-                  disabled={isPending}
-                  {...register("category")}
-                  type="text"
-                  required
-                  className={
-                    isDarkModeOn
-                      ? "border-neutral-800 bg-neutral-600 ring-offset-neutral-950 file:text-neutral-50 placeholder:text-neutral-400 focus-visible:ring-neutral-300"
-                      : ""
-                  }
-                />
+              <div className="flex gap-2">
+                <div className="grow">
+                  <Label htmlFor="calories">Kalorie</Label>
+                  <Input
+                    id="calories"
+                    disabled={isPending}
+                    {...register("calories")}
+                    type="text"
+                    required
+                  />
+                </div>
+                <div className="grow">
+                  <Label htmlFor="carbs">Węglowodany</Label>
+                  <Input
+                    id="carbs"
+                    disabled={isPending}
+                    {...register("carbs")}
+                    type="text"
+                    required
+                  />
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <div className="grow">
+                  <Label htmlFor="proteins">Białko</Label>
+                  <Input
+                    id="proteins"
+                    disabled={isPending}
+                    {...register("proteins")}
+                    type="text"
+                    required
+                  />
+                </div>
+                <div className="grow">
+                  <Label htmlFor="fat">Tłuszcz</Label>
+                  <Input
+                    id="fat"
+                    disabled={isPending}
+                    {...register("fat")}
+                    type="text"
+                    required
+                  />
+                </div>
               </div>
               <div className="mt-4 flex justify-between">
                 <button
@@ -175,18 +215,13 @@ function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
             </form>
           </div>
         ) : (
-          <div>
+          <div className="min-w-[400px]">
             <Input
               value={searchBar}
               onChange={(e) => {
                 setSearchBar(e.target.value);
               }}
               placeholder="Wyszukaj nazwę"
-              className={
-                isDarkModeOn
-                  ? "border-neutral-800 bg-neutral-600 ring-offset-neutral-950 file:text-neutral-50 placeholder:text-neutral-400 focus-visible:ring-neutral-300"
-                  : ""
-              }
             />
             <div className="flex items-center justify-between gap-6 border-b-[1px] border-primary-100 px-1 py-2">
               <span>Wybierz składnik</span>
@@ -200,6 +235,14 @@ function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
               </button>
             </div>
             <div className="max-h-[200px] overflow-y-auto">
+              <div className="grid w-full grid-cols-[100px_85px_0.8fr_0.5fr_0.5fr_0.5fr] gap-1 rounded-sm px-2 py-1 text-center">
+                <span className="text-left">Nazwa</span>
+                <span className="text-left">Kategoria</span>
+                <span>Kcal</span>
+                <span>W</span>
+                <span>B</span>
+                <span>T</span>
+              </div>
               {ingredients?.map((ingredient, i) => {
                 if (ingredient.name.toLowerCase().includes(searchBar))
                   return (
@@ -213,10 +256,18 @@ function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
                         append(ingredientToAdd);
                       }}
                       key={i}
-                      className={`flex w-full cursor-pointer items-center justify-between rounded-sm px-2 py-1 transition-colors ${isDarkModeOn ? "hover:bg-secondary-300" : "hover:bg-primary-50"}`}
+                      className="grid w-full cursor-pointer grid-cols-[100px_85px_0.8fr_0.5fr_0.5fr_0.5fr] gap-1 rounded-sm px-2 py-1 transition-colors hover:bg-primary-50 dark:hover:bg-secondary-300"
                     >
-                      <span className="text-start">{ingredient.name}</span>
-                      <span>{ingredient.category}</span>
+                      <span className="overflow-clip text-ellipsis text-nowrap text-left">
+                        {ingredient.name}
+                      </span>
+                      <span className="max-w-[85px] overflow-clip text-ellipsis text-nowrap text-left">
+                        {ingredient.category}
+                      </span>
+                      <span>{ingredient.calories}</span>
+                      <span>{ingredient.carbs}</span>
+                      <span>{ingredient.proteins}</span>
+                      <span>{ingredient.carbs}</span>
                     </PopoverClose>
                   );
               })}

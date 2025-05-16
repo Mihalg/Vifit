@@ -1,8 +1,9 @@
-import DataTableMenu from "@/components/dietician/DataTableMenu";
+import DataTableMenu from "@/components/dietitian/DataTableMenu";
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { DataTable } from "@/components/ui/DataTable";
 import Loader from "@/components/ui/Loader";
+import { capitalize } from "@/lib/utils";
 import { deleteMenu, duplicateMenu, getMenusList } from "@/services/apiMenus";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
@@ -62,7 +63,7 @@ const columns: ColumnDef<Menu>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="text-center">{row.getValue("name")}</div>
+      <div className="text-center">{capitalize(row.getValue("name"))}</div>
     ),
   },
   {
@@ -106,26 +107,6 @@ const columns: ColumnDef<Menu>[] = [
     ),
   },
   {
-    accessorKey: "fat",
-    header: ({ column }) => {
-      return (
-        <Button
-          className="w-full"
-          variant="ghost"
-          onClick={() => {
-            column.toggleSorting(column.getIsSorted() === "asc");
-          }}
-        >
-          Tłuszcze
-          <ArrowUpDown className="h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="text-center">{row.getValue("fat")}</div>
-    ),
-  },
-  {
     accessorKey: "proteins",
     header: ({ column }) => {
       return (
@@ -145,7 +126,24 @@ const columns: ColumnDef<Menu>[] = [
       <div className="text-center">{row.getValue("proteins")}</div>
     ),
   },
-
+  {
+    accessorKey: "fat",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="w-full"
+          variant="ghost"
+          onClick={() => {
+            column.toggleSorting(column.getIsSorted() === "asc");
+          }}
+        >
+          Tłuszcze
+          <ArrowUpDown className="h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div className="text-center">{row.getValue("fat")}</div>,
+  },
   {
     id: "actions",
     enableHiding: false,
@@ -178,13 +176,15 @@ function Menus() {
 
   if (data)
     return (
-      <DataTable<Menu>
-        columns={columns}
-        data={data}
-        searchbarPlaceholder="Wyszukaj po nazwie"
-        queryToInvalidate="menusList"
-        deleteFn={deleteMenu}
-      />
+      <div className="mt-12 sm:mt-0">
+        <DataTable<Menu>
+          columns={columns}
+          data={data}
+          searchbarPlaceholder="Wyszukaj po nazwie"
+          queryToInvalidate="menusList"
+          deleteFn={deleteMenu}
+        />
+      </div>
     );
 }
 

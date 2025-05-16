@@ -17,7 +17,7 @@ function AppointmentsList() {
   if (appointmentId || pathname === `/panel/${patientId}/wizyty/nowa-wizyta`)
     return <Outlet />;
   return (
-    <div className="grid grid-cols-1 lg:min-h-full lg:grid-cols-[15rem_1fr]">
+    <div className="grid grid-cols-1 lg:grid-cols-[16rem_1fr]">
       <div className="px-6 py-4 lg:border-r-[1px] dark:border-secondary-400">
         <p className="mb-7 text-3xl">Historia Wizyt</p>
         <Link

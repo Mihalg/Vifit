@@ -28,6 +28,29 @@ export async function getAppointmentData(id: number | null) {
   return appointment;
 }
 
+export async function getLastAppointment(id: string | undefined) {
+  if (!id)
+    throw new Error("Nie udało się załadować danych z ostatniej wizyty.");
+
+  const { data, error } = await supabase
+    .from("appointments")
+    .select(
+      "age, height, weight, water_weight, fat_weight, muscle_weight, notes, pal",
+    )
+    .eq("patient_id", +id)
+    .order("date", { ascending: false })
+    .limit(1)
+    .single();
+
+  if (error) {
+    console.error(error);
+    if(error.code === 'PGRST116') return
+    throw new Error("Nie udało się załadować danych z ostatniej wizyty.");
+  }
+
+  return data;
+}
+
 export async function editAppointment({
   data,
   id,

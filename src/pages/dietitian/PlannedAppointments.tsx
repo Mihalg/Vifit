@@ -1,5 +1,5 @@
+import { UseDarkModeContext } from "@/components/ThemeProvider";
 import useDietitianId from "@/hooks/useDietitianId";
-import { UseDarkModeContext } from "@/lib/utils";
 import {
   createEditEvent,
   deleteEvent,
@@ -28,7 +28,7 @@ const darkTheme = createTheme({
       paper: "#161617",
     },
     error: {
-      main: "#4f46e5",
+      main: "#fc6c2d",
     },
   },
 });

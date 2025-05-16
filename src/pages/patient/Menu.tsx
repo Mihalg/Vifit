@@ -1,7 +1,7 @@
 import Loader from "@/components/ui/Loader";
 import { getPatientMeals } from "@/services/apiMeals";
 import { useQuery } from "@tanstack/react-query";
-import MenuMeal from "./MenuMeal";
+import MenuMeal from "../../components/patient/MenuMeal";
 
 function Menu() {
   const { data, isLoading } = useQuery({

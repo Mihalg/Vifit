@@ -1,4 +1,5 @@
-import { UseDarkModeContext } from "@/lib/utils";
+import { UseDarkModeContext } from "../ThemeProvider";
+
 
 function Logo({ className }: { className?: string }) {
   const { isDarkModeOn } = UseDarkModeContext();

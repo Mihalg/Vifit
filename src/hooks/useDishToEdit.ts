@@ -21,6 +21,7 @@ export function useDishToEdit(dishId: string | undefined) {
       name: data.name,
       calories: data.calories,
       category: data.category,
+      group: data.group,
       description: data.description,
       ingredients: mergedIngredients,
       carbs: data.carbs,

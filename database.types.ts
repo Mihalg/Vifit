@@ -14,15 +14,15 @@ export type Database = {
     Tables: {
       appointments: {
         Row: {
-          age: number | null;
+          age: number;
           created_at: string;
           date: string | null;
           dietitian_id: string | null;
           fat_weight: number;
           height: number;
           id: number;
-          muscle_weight: number | null;
-          notes: string | null;
+          muscle_weight: number;
+          notes: string;
           pal: number;
           patient_id: number;
           water_weight: number;
@@ -119,9 +119,10 @@ export type Database = {
       };
       dishes: {
         Row: {
-          id?: number;
+          id: number;
           name: string;
           category: string;
+          group: string;
           calories: number;
           created_at: string;
           description: string;
@@ -131,13 +132,14 @@ export type Database = {
           proteins: number;
         };
         Insert: {
-          calories?: number | null;
-          category?: string | null;
+          calories: number;
+          category: string;
+          group: string;
           created_at?: string;
           description?: string | null;
-          dietitian_id?: string | null;
+          dietitian_id: string;
           id?: number;
-          name?: string | null;
+          name: string ;
           carbs: number;
           fat: number;
           proteins: number;
@@ -145,6 +147,7 @@ export type Database = {
         Update: {
           calories?: number | null;
           category?: string | null;
+          group?: string;
           created_at?: string;
           description?: string | null;
           dietitian_id?: string | null;
@@ -172,14 +175,22 @@ export type Database = {
           id: number;
           name: string;
           unit: string;
+          calories: number;
+          carbs: number;
+          fat: number;
+          proteins: number;
         };
         Insert: {
           category?: string | null;
           created_at?: string;
-          dietitian_id?: string | null;
+          dietitian_id: string;
           id?: number;
-          name?: string | null;
-          unit?: string | null;
+          name: string | null;
+          unit: string | null;
+          calories: number;
+          carbs: number;
+          fat: number;
+          proteins: number;
         };
         Update: {
           category?: string | null;
@@ -188,6 +199,10 @@ export type Database = {
           id?: number;
           name?: string | null;
           unit?: string | null;
+          calories?: number;
+          carbs?: number;
+          fat?: number;
+          proteins?: number;
         };
         Relationships: [
           {
@@ -376,9 +391,9 @@ export type Database = {
           name: string;
           dietitian_id: string;
           calories: number;
-          carbs?: number;
-          fat?: number;
-          proteins?: number;
+          carbs: number;
+          fat: number;
+          proteins: number;
         };
         Insert: {
           created_at?: string;
@@ -448,18 +463,39 @@ export type Database = {
         ];
       };
     };
-    Views: {
-      [_ in never]: never;
-    };
+     Views: { [_ in never]: never }
     Functions: {
-      [_ in never]: never;
-    };
-    Enums: {
-      [_ in never]: never;
-    };
-    CompositeTypes: {
-      [_ in never]: never;
-    };
+      get_unique_categories: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: number;
+          category: string
+        }[]
+      },
+      get_unique_groups: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: number;
+          group: string
+        }[]
+      },
+      get_unique_units: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: number;
+          unit: string
+        }[]
+      },
+     get_unique_igredients_categories: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: number;
+          category: string
+        }[]
+      }
+    }
+    Enums: { [_ in never]: never };
+    CompositeTypes: { [_ in never]: never };
   };
 };
 

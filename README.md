@@ -1,6 +1,6 @@
-# 🥗 NutriPath
+# 🥗 VitaFit
 
-**NutriPath** is a web application designed for dietitians and their clients. It helps manage nutrition plans, track progress, and streamline collaboration between professionals and patients.
+**VitaFit** is a web application designed for dietitians and their clients. It helps manage nutrition plans, track progress, and streamline collaboration between professionals and patients.
 
 ## ✨ Features
 

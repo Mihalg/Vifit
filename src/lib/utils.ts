@@ -1,5 +1,4 @@
 import { clsx, type ClassValue } from "clsx";
-import { createContext, Dispatch, SetStateAction, useContext } from "react";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -56,46 +55,6 @@ export function convertTime(time: string) {
   const convertedTime = time.slice(0, -3);
   return convertedTime;
 }
-
-// export function sumIngredients(
-//   mealDishes: {
-//     meal_dishes: {
-//       dish_id: {
-//         dish_ingredients: {
-//           quantity: number;
-//           quantity_in_words: string;
-//           ingredient_id: {
-//             id: number;
-//             category: string;
-//             name: string;
-//             unit: string;
-//           };
-//         }[];
-//       };
-//     }[];
-//   }[],
-// ) {
-//   const ingredientTotals: Record<
-//     number,
-//     { name: string; category: string; unit: string; totalQuantity: number }
-//   > = {};
-
-//   mealDishes.forEach((meal) => {
-//     meal.meal_dishes.forEach((dish) => {
-//       dish.dish_id.dish_ingredients.forEach((ingredient) => {
-//         const { id, name, unit, category } = ingredient.ingredient_id;
-//         const quantity = ingredient.quantity;
-
-//         if (!ingredientTotals[id]) {
-//           ingredientTotals[id] = { name, category, unit, totalQuantity: 0 };
-//         }
-//         ingredientTotals[id].totalQuantity += quantity;
-//       });
-//     });
-//   });
-
-//   return Object.values(ingredientTotals);
-// }
 
 export function sumIngredients(
   mealDishes: {
@@ -158,21 +117,6 @@ export function sumIngredients(
   return Object.values(ingredientTotals);
 }
 
-type DarkModeContext = {
-  isDarkModeOn: boolean;
-  setIsDarkModeOn: Dispatch<SetStateAction<boolean>>;
-};
-
-export const DarkModeContext = createContext<DarkModeContext | null>(null);
-
-export const UseDarkModeContext = () => {
-  const context = useContext(DarkModeContext);
-
-  if (!context) {
-    throw new Error(
-      "UseDarkModeContext has to be used within <UseDarkModeContext.Provider>",
-    );
-  }
-
-  return context;
-};
+export function capitalize(value: string){
+  return value.charAt(0).toUpperCase() + value.slice(1)
+}

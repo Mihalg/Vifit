@@ -69,15 +69,17 @@ export async function registerUser(form: {
   const userId = authData.user?.id;
 
   if (!userId) return;
-  const { error: insertError } = await supabase.from("users").insert([
-    {
-      user_id: userId,
-      full_name: form.full_name,
-      sex: form.sex,
-      email: form.email,
-      role: "patient",
-    },
-  ]);
+  const { error: insertError } = await supabase
+    .from("users")
+    .insert([
+      {
+        user_id: userId,
+        full_name: form.full_name,
+        sex: form.sex,
+        email: form.email,
+        role: "patient",
+      },
+    ]);
 
   if (insertError) {
     console.error("Błąd rejestracji:", insertError.message);
@@ -91,9 +93,7 @@ export async function logout() {
 }
 
 export async function editPassword(password: string) {
-  const { error } = await supabase.auth.updateUser({
-    password,
-  });
+  const { error } = await supabase.auth.updateUser({ password });
 
   if (error) throw new Error("Nie udało się zmienić hasła");
 }

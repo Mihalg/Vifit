@@ -75,6 +75,7 @@ function Login() {
   if (!isAuthenticated)
     return (
       <div className="flex h-dvh flex-col items-center justify-center gap-5 bg-secondary-600 text-secondary-400">
+        <img src="/logo-light.png" alt="Logo" className="mx-auto w-80 lg:w-96 absolute top-10 lg:top-16" />
         <div className="relative mx-auto min-w-80 rounded-md border bg-white px-5 py-4">
           {forgotPassword ? (
             <>

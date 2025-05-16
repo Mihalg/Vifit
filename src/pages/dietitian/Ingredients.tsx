@@ -1,8 +1,9 @@
-import DataTableMenu from "@/components/dietician/DataTableMenu";
+import DataTableMenu from "@/components/dietitian/DataTableMenu";
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { DataTable } from "@/components/ui/DataTable";
 import Loader from "@/components/ui/Loader";
+import { capitalize } from "@/lib/utils";
 import {
   deleteIngredient,
   duplicateIngredient,
@@ -64,10 +65,33 @@ const columns: ColumnDef<Ingredient>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="text-center">{row.getValue("name")}</div>
+      <div className="text-center">{capitalize(row.getValue("name"))}</div>
     ),
   },
-
+  {
+    accessorKey: "category",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="w-full"
+          variant="ghost"
+          onClick={() => {
+            column.toggleSorting(column.getIsSorted() === "asc");
+          }}
+        >
+          Kategoria
+          <ArrowUpDown className="h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <div className="text-center">
+          {capitalize(row.getValue("category"))}
+        </div>
+      );
+    },
+  },
   {
     accessorKey: "unit",
     header: ({ column }) => {
@@ -89,7 +113,7 @@ const columns: ColumnDef<Ingredient>[] = [
     },
   },
   {
-    accessorKey: "category",
+    accessorKey: "calories",
     header: ({ column }) => {
       return (
         <Button
@@ -99,13 +123,73 @@ const columns: ColumnDef<Ingredient>[] = [
             column.toggleSorting(column.getIsSorted() === "asc");
           }}
         >
-          Kategoria
+          Kalorie
           <ArrowUpDown className="h-4 w-4" />
         </Button>
       );
     },
     cell: ({ row }) => {
-      return <div className="text-center">{row.getValue("category")}</div>;
+      return <div className="text-center">{row.getValue("calories")}</div>;
+    },
+  },
+  {
+    accessorKey: "carbs",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="w-full"
+          variant="ghost"
+          onClick={() => {
+            column.toggleSorting(column.getIsSorted() === "asc");
+          }}
+        >
+          Węglowodany
+          <ArrowUpDown className="h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <div className="text-center">{row.getValue("carbs")}</div>;
+    },
+  },
+  {
+    accessorKey: "proteins",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="w-full"
+          variant="ghost"
+          onClick={() => {
+            column.toggleSorting(column.getIsSorted() === "asc");
+          }}
+        >
+          Białko
+          <ArrowUpDown className="h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <div className="text-center">{row.getValue("proteins")}</div>;
+    },
+  },
+  {
+    accessorKey: "fat",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="w-full"
+          variant="ghost"
+          onClick={() => {
+            column.toggleSorting(column.getIsSorted() === "asc");
+          }}
+        >
+          Tłuszcz
+          <ArrowUpDown className="h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return <div className="text-center">{row.getValue("fat")}</div>;
     },
   },
 
@@ -135,10 +219,7 @@ function Ingredients() {
     queryFn: getIngredientsList,
   });
 
-  if (
-    pathname === "/panel/baza/sk%C5%82adniki/nowy" ||
-    ingredientId
-  )
+  if (pathname === "/panel/baza/sk%C5%82adniki/nowy" || ingredientId)
     return <Outlet />;
 
   if (isLoading) return <Loader />;

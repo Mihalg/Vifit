@@ -1,11 +1,11 @@
 import { useAuth } from "@/hooks/useAuth";
 import { useOutsideClick } from "@/hooks/useOutsideClick";
-import { UseDarkModeContext } from "@/lib/utils";
 import { Moon, Settings, Sun } from "lucide-react";
 import { createContext, PropsWithChildren, ReactNode, useContext } from "react";
 import { NavLink, useNavigate } from "react-router";
 import Logo from "../ui/Logo";
 import LogoutButton from "../ui/LogoutButton";
+import { UseDarkModeContext } from "../ThemeProvider";
 
 type MainNavContext = {
   toggleMenu: () => void;
@@ -55,7 +55,7 @@ export default function MainNav({
     <MainNavContext.Provider value={{ toggleMenu }}>
       <nav
         ref={ref}
-        className={`absolute left-0 top-0 h-dvh w-72 border-r-[1px] border-r-primary-50 py-3 backdrop-blur-md ${isActive ? "translate-x-0" : "-translate-x-full"} flex flex-col transition-transform xl:static xl:h-full xl:translate-x-0 xl:border-none`}
+        className={`fixed left-0 top-0 h-dvh w-72 border-r-[1px] border-r-primary-50 py-3 backdrop-blur-md dark:border-r-secondary-400 ${isActive ? "translate-x-0" : "-translate-x-full"} flex flex-col transition-transform xl:static xl:h-full xl:translate-x-0 xl:border-none`}
       >
         <Logo className="px-6" />
         <ul className="mx-auto mt-6 w-4/5 grow flex-col justify-center space-y-2">

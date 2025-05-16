@@ -1,4 +1,4 @@
-import AppointmentsSummaryCharts from "@/components/dietician/AppointmentsSummaryCharts";
+import AppointmentsSummaryCharts from "@/components/dietitian/AppointmentsSummaryCharts";
 import usePatientId from "@/hooks/usePatientId";
 import { sortAppointmentsByDate } from "@/lib/utils";
 import { getPatientAppointmentsList } from "@/services/apiAppointments";
@@ -17,7 +17,7 @@ function VisitsHistory() {
   if (appointmentId) return <Outlet />;
 
   return (
-    <div className="grid grid-cols-1 lg:min-h-full lg:grid-cols-[15rem_1fr]">
+    <div className="grid grid-cols-1 lg:min-h-full lg:grid-cols-[16rem_1fr]">
       <div className="px-6 py-4 lg:border-r-[1px] lg:dark:border-r-secondary-400">
         <p className="mb-6 text-3xl">Historia Wizyt</p>
         <div className="scrollbar lg:max-h-[720px] lg:overflow-y-auto lg:px-1">

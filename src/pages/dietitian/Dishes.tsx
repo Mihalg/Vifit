@@ -1,8 +1,9 @@
-import DataTableMenu from "@/components/dietician/DataTableMenu";
+import DataTableMenu from "@/components/dietitian/DataTableMenu";
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { DataTable } from "@/components/ui/DataTable";
 import Loader from "@/components/ui/Loader";
+import { capitalize } from "@/lib/utils";
 import { deleteDish, duplicateDish, getDishesList } from "@/services/apiDishes";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
@@ -14,6 +15,9 @@ type Dish = {
   name: string;
   category: string;
   calories: number;
+  carbs: number;
+  fat: number;
+  proteins: number;
 };
 
 const columns: ColumnDef<Dish>[] = [
@@ -60,10 +64,31 @@ const columns: ColumnDef<Dish>[] = [
       );
     },
     cell: ({ row }) => (
-      <div className="text-center">{row.getValue("name")}</div>
+      <div className="text-center">{capitalize(row.getValue("name"))}</div>
     ),
   },
-
+  {
+    accessorKey: "group",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="w-full"
+          variant="ghost"
+          onClick={() => {
+            column.toggleSorting(column.getIsSorted() === "asc");
+          }}
+        >
+          Grupa
+          <ArrowUpDown className="h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      return (
+        <div className="text-center">{capitalize(row.getValue("group"))}</div>
+      );
+    },
+  },
   {
     accessorKey: "category",
     header: ({ column }) => {
@@ -81,9 +106,14 @@ const columns: ColumnDef<Dish>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div className="text-center">{row.getValue("category")}</div>;
+      return (
+        <div className="text-center">
+          {capitalize(row.getValue("category"))}
+        </div>
+      );
     },
   },
+
   {
     accessorKey: "calories",
     header: ({ column }) => {
@@ -104,7 +134,64 @@ const columns: ColumnDef<Dish>[] = [
       return <div className="text-center">{row.getValue("calories")}</div>;
     },
   },
-
+  {
+    accessorKey: "carbs",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="w-full"
+          variant="ghost"
+          onClick={() => {
+            column.toggleSorting(column.getIsSorted() === "asc");
+          }}
+        >
+          Węglowodany
+          <ArrowUpDown className="h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <div className="text-center">{row.getValue("carbs")}</div>
+    ),
+  },
+  {
+    accessorKey: "proteins",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="w-full"
+          variant="ghost"
+          onClick={() => {
+            column.toggleSorting(column.getIsSorted() === "asc");
+          }}
+        >
+          Białko
+          <ArrowUpDown className="h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => (
+      <div className="text-center">{row.getValue("proteins")}</div>
+    ),
+  },
+  {
+    accessorKey: "fat",
+    header: ({ column }) => {
+      return (
+        <Button
+          className="w-full"
+          variant="ghost"
+          onClick={() => {
+            column.toggleSorting(column.getIsSorted() === "asc");
+          }}
+        >
+          Tłuszcze
+          <ArrowUpDown className="h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => <div className="text-center">{row.getValue("fat")}</div>,
+  },
   {
     id: "actions",
     enableHiding: false,
@@ -131,12 +218,7 @@ function Dishes() {
     queryFn: getDishesList,
   });
 
-  if (
-    pathname ===
-      "/panel/baza/posi%C5%82ki/nowy" ||
-    dishId
-  )
-    return <Outlet />;
+  if (pathname === "/panel/baza/posi%C5%82ki/nowy" || dishId) return <Outlet />;
 
   if (isLoading) return <Loader />;
 

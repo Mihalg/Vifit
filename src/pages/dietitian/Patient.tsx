@@ -4,7 +4,7 @@ function Patients() {
   return (
     <div className="flex h-screen flex-col">
       <div className="border-b-[1px] px-4 py-2 dark:border-b-secondary-400">
-        <div className="flex w-fit gap-2 rounded-md bg-secondary-300 px-1 py-1 dark:bg-secondary-400">
+        <div className="flex w-fit gap-2 rounded-md bg-secondary-200 px-1 py-1 dark:bg-secondary-400">
           <NavLink
             to="wizyty"
             className="topBar-navlink rounded-md px-4 py-2 font-semibold transition-colors"

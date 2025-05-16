@@ -3,7 +3,7 @@ import supabase from "./supabase";
 export async function getDishesList() {
   const { data: dishes, error } = await supabase
     .from("dishes")
-    .select("id, category, name , calories, carbs, fat, proteins");
+    .select("id, category, group, name, calories, carbs, fat, proteins");
 
   if (error) throw new Error("Nie udało się pobrać listy posiłków.");
 
@@ -18,6 +18,7 @@ export async function getDish(id: number | null) {
       `
     name, 
     category, 
+    group,
     calories, 
     carbs,
     fat,
@@ -30,7 +31,11 @@ export async function getDish(id: number | null) {
         id,
         name, 
         category, 
-        unit
+        unit,
+        calories,
+        carbs,
+        proteins,
+        fat
       )
     )
   `,
@@ -54,6 +59,7 @@ export async function addEditDish({
   dish: {
     name: string;
     category: string;
+    group: string;
     calories: number;
     carbs: number;
     fat: number;
@@ -77,6 +83,7 @@ export async function addEditDish({
       name: dish.name,
       calories: dish.calories,
       category: dish.category,
+      group: dish.group,
       description: dish.description,
       carbs: dish.carbs,
       fat: dish.fat,
@@ -168,12 +175,15 @@ export async function duplicateDish(id: number) {
   const { data: dish, error: getDishError } = await supabase
     .from("dishes")
     .select(
-      "dietitian_id, name, description, calories, category, carbs, fat, proteins, dish_ingredients( ingredient_id, quantity, quantity_in_words)",
+      "dietitian_id, name, description, calories, category, group, carbs, fat, proteins, dish_ingredients( ingredient_id, quantity, quantity_in_words)",
     )
     .eq("id", id)
     .single();
 
-  if (getDishError) throw new Error("Nie udało się zduplikować posiłku");
+  if (getDishError) {
+    console.error(getDishError);
+    throw new Error("Nie udało się zduplikować posiłku");
+  }
 
   const dishToDuplicate = {
     name: dish.name,
@@ -181,6 +191,7 @@ export async function duplicateDish(id: number) {
     description: dish.description,
     calories: dish.calories,
     category: dish.category,
+    group: dish.group,
     carbs: dish.carbs,
     fat: dish.fat,
     proteins: dish.proteins,
@@ -193,7 +204,7 @@ export async function duplicateDish(id: number) {
     .single();
 
   if (addDishError) {
-    console.log(addDishError);
+    console.error(addDishError);
     throw new Error("Nie udało się zduplikować posiłku");
   }
 
@@ -206,4 +217,40 @@ export async function duplicateDish(id: number) {
     .insert(ingredientsToDuplicate);
 
   if (addIngredientsError) throw new Error("Nie udało się zduplikować posiłku");
+}
+
+export async function getUniqueCategoriesList(){
+const { data, error } = await supabase.rpc('get_unique_categories')
+
+  if(error){
+    console.error(error)
+    throw new Error('Nie udało się pobrać listy kategorii.')
+  }
+
+  return data.map(item => {
+    const objWithName = {
+      id: item.id,
+      name: item.category
+    }
+
+    return objWithName
+  })
+}
+
+export async function getUniqueGroupsList(){
+const { data, error } = await supabase.rpc('get_unique_groups')
+
+  if(error){
+    console.error(error)
+    throw new Error('Nie udało się pobrać listy grup.')
+  }
+
+  return data.map(item => {
+    const objWithName = {
+      id: item.id,
+      name: item.group
+    }
+
+    return objWithName
+  })
 }

@@ -19,10 +19,10 @@ function AddPatientForm() {
       toast.error(err.message);
     },
     onSuccess: () => {
-      toast.success("Dodano pacjenta!", {
-        duration: 6500,
-      });
+      toast.success("Dodano pacjenta!", { duration: 6500 });
       void queryClient.invalidateQueries({ queryKey: ["patientsList"] });
+      setEmail("");
+      setIsOpen(false);
     },
   });
 

@@ -4,7 +4,6 @@ import { useMoveBack } from "@/hooks/useMoveBack";
 import { addEditMeal } from "@/services/apiMeals";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, MinusIcon } from "lucide-react";
-import { useEffect, useRef } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useParams } from "react-router";
@@ -41,21 +40,13 @@ function MealForm() {
       time: "",
       calories: 0,
     },
+    values: meal
   });
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "meal_dishes",
   });
-
-  const isReset = useRef(false);
-
-  useEffect(() => {
-    if (meal && !isReset.current) {
-      reset(meal);
-      isReset.current = true;
-    }
-  }, [meal, reset]);
 
   const { mutate } = useMutation({
     mutationFn: addEditMeal,
@@ -73,7 +64,6 @@ function MealForm() {
   const onSubmit: SubmitHandler<FormFields> = (data) => {
     mutate({ meal: data, patientId, mealId, dietitianId });
   };
-
 
   if (isLoading) return <Loader />;
 
@@ -112,7 +102,7 @@ function MealForm() {
           </div>
         </div>
         <div className="flex items-center gap-8">
-          <p className="text-3xl text-primary-600 lg:text-4xl">
+          <p className="text-3xl text-primary-600 dark:text-secondary-100 lg:text-4xl">
             Dania do wyboru dla pacjenta
           </p>
           <AddDishPopover append={append} />

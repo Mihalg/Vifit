@@ -1,9 +1,11 @@
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
+import Loader from "@/components/ui/Loader";
 import { Textarea } from "@/components/ui/Textarea";
-import { addAppointment } from "@/services/apiAppointments";
+import { addAppointment, getLastAppointment } from "@/services/apiAppointments";
 import { Label } from "@radix-ui/react-label";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { format } from "date-fns";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router";
@@ -32,7 +34,27 @@ function AddAppointment() {
   const { patientId } = useParams();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<AppointmentFormFields>();
+  const date = format(new Date(), "yyyy-MM-dd");
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["lastAppointment", patientId],
+    queryFn: () => getLastAppointment(patientId),
+  });
+
+  const { register, handleSubmit } = useForm<AppointmentFormFields>({
+    defaultValues: {
+      age: 0,
+      weight: 0,
+      height: 0,
+      fat_weight: 0,
+      water_weight: 0,
+      muscle_weight: 0,
+      pal: 1,
+      date: date,
+      notes: "",
+    },
+    values: data ? { ...data, date: date } : undefined,
+  });
   const { mutate, isPending } = useMutation({
     mutationFn: addAppointment,
     onSuccess: async () => {
@@ -58,6 +80,8 @@ function AddAppointment() {
       dietitianId: dietitianId,
     });
   };
+
+  if (isLoading) return <Loader />;
 
   return (
     <form

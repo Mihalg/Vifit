@@ -1,7 +1,8 @@
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import * as React from "react";
 
-import { cn, UseDarkModeContext } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+import { UseDarkModeContext } from "../ThemeProvider";
 
 const Popover = PopoverPrimitive.Root;
 

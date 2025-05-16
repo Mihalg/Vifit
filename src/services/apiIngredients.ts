@@ -3,7 +3,7 @@ import supabase from "./supabase";
 export async function getIngredientsList() {
   const { data: ingredients, error } = await supabase
     .from("ingredients")
-    .select("id, name, unit, category");
+    .select("id, name, unit, category, calories, carbs, fat, proteins");
 
   if (error) throw new Error("Wystąpił błąd");
 
@@ -15,7 +15,7 @@ export async function getIngredient(id: number | null) {
 
   const { data: ingredient, error } = await supabase
     .from("ingredients")
-    .select("name, category, unit, dietitian_id")
+    .select("name, category, unit, dietitian_id, carbs, fat, calories, proteins")
     .eq("id", id)
     .single();
 
@@ -62,15 +62,20 @@ export async function addEditIngredient({
     name: string;
     category: string;
     unit: string;
+    calories: number;
+    carbs: number;
+    fat: number;
+    proteins: number;
   };
   ingredientId?: string | undefined;
   dietitianId?: string | undefined;
 }) {
+
   //ADD
   if (dietitianId) {
     const { data, error } = await supabase
       .from("ingredients")
-      .insert({ ...ingredient, dietitian_id: dietitianId })
+      .insert({...ingredient, name: ingredient.name.toLowerCase(), dietitian_id: dietitianId, })
       .select()
       .single();
 
@@ -78,12 +83,13 @@ export async function addEditIngredient({
 
     return data;
   } else if (ingredientId) {
+    //EDIT
     const { error } = await supabase
       .from("ingredients")
       .update(ingredient)
       .eq("id", +ingredientId);
 
-    if (error) throw new Error("Nie udało się dodać składnika.");
+    if (error) throw new Error("Nie udało się edytować składnika.");
   }
 }
 
@@ -96,5 +102,42 @@ export async function duplicateIngredient(id: number) {
     .from("ingredients")
     .insert(ingredient);
 
-  if (insertError) throw new Error("Wystąpił błąd");
+  if (insertError){
+    console.error(insertError); 
+    throw new Error('Nie udało się zduplikować składnika');}
+}
+
+export async function getUniqueUnitsList(){
+const { data, error } = await supabase.rpc('get_unique_units')
+
+  if(error){
+    console.error(error)
+    throw new Error('Nie udało się pobrać listy jednostek.')
+  }
+
+  return data.map(item => {
+    const objWithName = {
+      id: item.id,
+      name: item.unit
+    }
+
+    return objWithName
+  })
+}
+export async function getUniqueIngredientsCategories(){
+const { data, error } = await supabase.rpc('get_unique_igredients_categories')
+
+  if(error){
+    console.error(error)
+    throw new Error('Nie udało się pobrać listy kategorii.')
+  }
+
+  return data.map(item => {
+    const objWithName = {
+      id: item.id,
+      name: item.category
+    }
+
+    return objWithName
+  })
 }

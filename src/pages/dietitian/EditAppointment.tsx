@@ -1,4 +1,4 @@
-import AppointmentForm from "@/components/dietician/AppointmentData";
+import AppointmentForm from "@/components/dietitian/AppointmentData";
 import Loader from "@/components/ui/Loader";
 import { getAppointmentData } from "@/services/apiAppointments";
 import { useQuery } from "@tanstack/react-query";

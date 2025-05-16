@@ -152,6 +152,7 @@ export async function addEditMenu({
       .insert(dishesToAdd);
 
     if (menuError || dishes_menusError || deleteIngredientsError)
+      console.error(menuError || dishes_menusError || deleteIngredientsError)
       throw new Error("Nie udało się edytować jadłospisu.");
   }
 }
@@ -160,13 +161,13 @@ export async function deleteMenu(id: number | number[]) {
   if (typeof id === "number") {
     const { error } = await supabase.from("menus").delete().eq("id", id);
     if (error) {
-      console.log(error);
+      console.error(error);
       throw new Error("Nie udało się usunąć pozycji");
     }
   } else {
     const { error } = await supabase.from("menus").delete().in("id", id);
     if (error) {
-      console.log(error);
+      console.error(error);
       throw new Error("Nie udało się usunąć pozycji");
     }
   }
@@ -181,7 +182,9 @@ export async function duplicateMenu(id: number) {
     .eq("id", id)
     .single();
 
-  if (getMenuError) throw new Error("Nie udało się zduplikować jadłospisu");
+  if (getMenuError) {
+    console.error(getMenuError)
+    throw new Error("Nie udało się zduplikować jadłospisu");}
 
   const menuToDuplicate = {
     name: menu.name,
@@ -199,7 +202,7 @@ export async function duplicateMenu(id: number) {
     .single();
 
   if (addMenuError) {
-    console.log(addMenuError);
+    console.error(addMenuError);
     throw new Error("Nie udało się zduplikować jadłospisu");
   }
 
@@ -211,5 +214,7 @@ export async function duplicateMenu(id: number) {
     .from("dishes_menus")
     .insert(dishesToDuplicate);
 
-  if (addDishesError) throw new Error("Nie udało się zduplikować jadłospisu");
+  if (addDishesError) {
+    console.error(addDishesError)
+    throw new Error("Nie udało się zduplikować jadłospisu");}
 }

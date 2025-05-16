@@ -1,23 +1,28 @@
 import useDietitianId from "@/hooks/useDietitianId";
 import { useDishToEdit } from "@/hooks/useDishToEdit";
 import { useMoveBack } from "@/hooks/useMoveBack";
-import { addEditDish } from "@/services/apiDishes";
+import {
+  addEditDish,
+  getUniqueCategoriesList,
+  getUniqueGroupsList,
+} from "@/services/apiDishes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, MinusIcon } from "lucide-react";
-import { useEffect, useRef } from "react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useParams } from "react-router";
 import { Button } from "../ui/Button";
+import ComboInput from "../ui/ComboInput";
 import { Input } from "../ui/Input";
 import { Label } from "../ui/Label";
+import Loader from "../ui/Loader";
 import { Textarea } from "../ui/Textarea";
 import AddIngredientPopover from "./AddIngredientPopover";
-import Loader from "../ui/Loader";
 
 type FormFields = {
   name: string;
   category: string;
+  group: string;
   calories: number;
   carbs: number;
   fat: number;
@@ -27,6 +32,10 @@ type FormFields = {
     name: string;
     unit: string;
     category: string;
+    calories: number;
+    carbs: number;
+    proteins: number;
+    fat: number;
     quantity: number;
     quantity_in_words: string;
   }[];
@@ -40,36 +49,35 @@ function DishForm() {
   const { dishId } = useParams();
   const { dish, isLoading } = useDishToEdit(dishId);
 
-  const { register, handleSubmit, control, reset } = useForm<FormFields>({
-    defaultValues: {
-      name: "",
-      category: "",
-      calories: 0,
-      description: "",
-      carbs: 0,
-      fat: 0,
-      proteins: 0,
+  const { register, handleSubmit, control, reset, watch } = useForm<FormFields>(
+    {
+      defaultValues: {
+        name: "",
+        category: "",
+        group: "",
+        calories: 0,
+        description: "",
+        carbs: 0,
+        fat: 0,
+        proteins: 0,
+        ingredients: [],
+      },
+      values: dish,
     },
-  });
+  );
 
   const { fields, append, remove } = useFieldArray({
     control,
     name: "ingredients",
   });
 
-  const isReset = useRef(false);
-
-  useEffect(() => {
-    if (dish && !isReset.current) {
-      reset(dish);
-      isReset.current = true;
-    }
-  }, [dish, reset]);
-
   const { mutate } = useMutation({
     mutationFn: addEditDish,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["dish", dishId] });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["dish", dishId] }),
+        queryClient.invalidateQueries({ queryKey: ["dishesList"] }),
+      ]);
       toast.success("Sukces!");
       await moveBack();
       reset();
@@ -84,6 +92,22 @@ function DishForm() {
   };
 
   if (isLoading) return <Loader />;
+
+  const calories = watch("ingredients").reduce((acc, field) => {
+    return acc + field.calories * field.quantity;
+  }, 0);
+
+  const carbs = watch("ingredients").reduce((acc, field) => {
+    return acc + field.carbs * field.quantity;
+  }, 0);
+
+  const proteins = watch("ingredients").reduce((acc, field) => {
+    return acc + field.proteins * field.quantity;
+  }, 0);
+
+  const fat = watch("ingredients").reduce((acc, field) => {
+    return acc + field.fat * field.quantity;
+  }, 0);
 
   return (
     <div className="max-h-[900px] scroll-mb-56 lg:overflow-y-auto">
@@ -105,14 +129,29 @@ function DishForm() {
             <Label htmlFor="name">Nazwa</Label>
             <Input id="name" type="text" required {...register("name")} />
           </div>
-          <div className="col-start-1">
-            <Label htmlFor="category">Kategoria</Label>
-            <Input
-              id="category"
-              type="text"
-              required
-              {...register("category")}
-            />
+          <div className="col-start-1 flex flex-col gap-2 lg:flex-row">
+            <div className="grow">
+              <Label htmlFor="group">Grupa</Label>
+              <ComboInput<FormFields>
+                queryKey="dishesGroups"
+                queryFunction={getUniqueGroupsList}
+                inputId="group"
+                register={register}
+                control={control}
+                defaultValue={dish?.group}
+              />
+            </div>
+            <div className="grow">
+              <Label htmlFor="group">Kategoria</Label>
+              <ComboInput<FormFields>
+                queryKey="dishesCategories"
+                queryFunction={getUniqueCategoriesList}
+                inputId="category"
+                register={register}
+                control={control}
+                defaultValue={dish?.category}
+              />
+            </div>
           </div>
           <div className="col-start-1">
             <Label htmlFor="calories">Kalorie</Label>
@@ -121,23 +160,41 @@ function DishForm() {
               type="number"
               required
               {...register("calories")}
+              value={calories}
+              disabled
             />
           </div>
           <div className="lg:col-start-2 lg:row-start-1">
             <Label htmlFor="carbs">Węglowodany</Label>
-            <Input id="carbs" type="number" required {...register("carbs")} />
+            <Input
+              id="carbs"
+              type="number"
+              required
+              {...register("carbs")}
+              value={carbs}
+              disabled
+            />
           </div>
           <div className="lg:col-start-2 lg:row-start-2">
-            <Label htmlFor="fat">Tłuszcze</Label>
-            <Input id="fat" type="number" required {...register("fat")} />
-          </div>
-          <div className="lg:col-start-2">
             <Label htmlFor="proteins">Białko</Label>
             <Input
               id="proteins"
               type="number"
               required
               {...register("proteins")}
+              value={proteins}
+              disabled
+            />
+          </div>
+          <div className="lg:col-start-2">
+            <Label htmlFor="fat">Tłuszcz</Label>
+            <Input
+              id="fat"
+              type="number"
+              required
+              {...register("fat")}
+              value={fat}
+              disabled
             />
           </div>
           <div className="col-start-1 h-full lg:col-span-2">
@@ -151,11 +208,13 @@ function DishForm() {
           </div>
         </div>
         <div className="flex items-center gap-8">
-          <p className="text-3xl text-primary-600 lg:text-4xl">Składniki</p>
+          <p className="text-3xl text-primary-600 dark:text-secondary-100 lg:text-4xl">
+            Składniki
+          </p>
           <AddIngredientPopover append={append} />
         </div>
         {fields.map((field, i) => (
-          <div className="flex flex-col gap-4 lg:flex-row" key={field.id}>
+          <div className="flex flex-col gap-2 lg:flex-row" key={field.id}>
             <Input className="hidden" {...register(`ingredients.${i}.id`)} />
             <div className="grow">
               <Label htmlFor={`ingredients.${i}.name`}>Nazwa</Label>
@@ -167,7 +226,7 @@ function DishForm() {
                 {...register(`ingredients.${i}.name`)}
               />
             </div>
-            <div className="">
+            <div>
               <Label htmlFor={`ingredients.${i}.category`}>Kategoria</Label>
               <Input
                 disabled
@@ -175,6 +234,46 @@ function DishForm() {
                 type="text"
                 required
                 {...register(`ingredients.${i}.category`)}
+              />
+            </div>
+            <div>
+              <Label htmlFor={`ingredients.${i}.calories`}>Kalorie</Label>
+              <Input
+                disabled
+                id={`ingredients.${i}.calories`}
+                type="text"
+                required
+                {...register(`ingredients.${i}.calories`)}
+              />
+            </div>
+            <div>
+              <Label htmlFor={`ingredients.${i}.carbs`}>Węglowowdany</Label>
+              <Input
+                disabled
+                id={`ingredients.${i}.carbs`}
+                type="text"
+                required
+                {...register(`ingredients.${i}.carbs`)}
+              />
+            </div>
+            <div>
+              <Label htmlFor={`ingredients.${i}.proteins`}>Białko</Label>
+              <Input
+                disabled
+                id={`ingredients.${i}.proteins`}
+                type="text"
+                required
+                {...register(`ingredients.${i}.proteins`)}
+              />
+            </div>
+            <div>
+              <Label htmlFor={`ingredients.${i}.fat`}>Tłuszcz</Label>
+              <Input
+                disabled
+                id={`ingredients.${i}.fat`}
+                type="text"
+                required
+                {...register(`ingredients.${i}.fat`)}
               />
             </div>
             <div>

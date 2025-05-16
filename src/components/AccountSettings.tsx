@@ -4,9 +4,18 @@ import { Input } from "./ui/Input";
 import { Label } from "./ui/Label";
 import { useState } from "react";
 import { editPassword } from "@/services/apiAuth";
+import toast from "react-hot-toast";
 
 function AccountSettings() {
-  const { mutate } = useMutation({ mutationFn: editPassword });
+  const { mutate, isPending } = useMutation({
+    mutationFn: editPassword,
+    onSuccess: () => {
+      toast.success("Zmieniono hasło");
+    },
+    onError: (err) => {
+      toast.error(err.message);
+    },
+  });
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -33,6 +42,7 @@ function AccountSettings() {
             type="password"
             id="password"
             name="password"
+            disabled={isPending}
           />
         </div>
         <div className="mb-4 mt-2">
@@ -45,6 +55,7 @@ function AccountSettings() {
             type="password"
             id="password-repeat"
             name="password-repeat"
+            disabled={isPending}
           />
           <p
             className={`${confirmPassword !== password ? "block" : "hidden"} mt-1 text-red-700`}
@@ -52,7 +63,9 @@ function AccountSettings() {
             Hasła muszą być takie same
           </p>
         </div>
-        <Button className="ml-auto block">Zapisz</Button>
+        <Button className="ml-auto block" disabled={isPending}>
+          Zapisz
+        </Button>
       </form>
     </div>
   );

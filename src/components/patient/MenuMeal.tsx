@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/Button";
 import { useOutsideClick } from "@/hooks/useOutsideClick";
+import { capitalize } from "@/lib/utils";
 import { useState } from "react";
 
 type MenuMealProps = {
@@ -63,10 +64,10 @@ function MenuMeal({ meal }: MenuMealProps) {
         </div>
       </div>
 
-      <div className="mb-4 rounded-md bg-secondary-100 px-4 py-4 dark:bg-secondary-500">
+      <div className="mb-4 rounded-md bg-secondary-100 px-4 py-4 dark:bg-secondary-400">
         <div className="flex flex-col items-center gap-4 text-3xl md:flex-row">
           <div className="flex gap-4">
-            <p>{meal.name}</p>
+            <p>{capitalize(meal.name)}</p>
             <p>{meal.time.slice(0, 5)}</p>
           </div>
           <Button
@@ -94,7 +95,7 @@ function MenuMeal({ meal }: MenuMealProps) {
                     key={i}
                     className="mb-2 grid grid-cols-3 border-l-2 border-primary-600 py-1 pl-2"
                   >
-                    <p>{ingredient.ingredient_id.name}</p>
+                    <p>{capitalize(ingredient.ingredient_id.name)}</p>
                     <p>
                       {ingredient.quantity}
                       {ingredient.ingredient_id.unit}

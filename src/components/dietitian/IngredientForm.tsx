@@ -1,10 +1,13 @@
 import useDietitianId from "@/hooks/useDietitianId";
 import { useIngredientToEdit } from "@/hooks/useIngredientToEdit";
 import { useMoveBack } from "@/hooks/useMoveBack";
-import { addEditIngredient } from "@/services/apiIngredients";
+import {
+  addEditIngredient,
+  getUniqueIngredientsCategories,
+  getUniqueUnitsList,
+} from "@/services/apiIngredients";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft } from "lucide-react";
-import { useEffect, useRef } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { useParams } from "react-router";
@@ -12,11 +15,16 @@ import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import { Label } from "../ui/Label";
 import Loader from "../ui/Loader";
+import ComboInput from "../ui/ComboInput";
 
 type FormFields = {
   name: string;
   unit: string;
   category: string;
+  calories: number;
+  carbs: number;
+  fat: number;
+  proteins: number;
 };
 
 function IngredientForm() {
@@ -29,27 +37,24 @@ function IngredientForm() {
     ingredientId ? +ingredientId : null,
   );
 
-  const { register, handleSubmit, reset } = useForm<FormFields>({
+  const { register, handleSubmit, reset, control } = useForm<FormFields>({
     defaultValues: {
       name: "",
       category: "",
       unit: "",
+      calories: 0,
+      carbs: 0,
+      fat: 0,
+      proteins: 0,
     },
+    values: ingredient,
+
   });
-
-  const isReset = useRef(false);
-
-  useEffect(() => {
-    if (ingredient && !isReset.current) {
-      reset(ingredient);
-      isReset.current = true;
-    }
-  }, [ingredient, reset]);
 
   const { mutate } = useMutation({
     mutationFn: addEditIngredient,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["ingredients"] });
+      await queryClient.invalidateQueries({ queryKey: ["ingredientsList"] });
       toast.success("Sukces!");
       await moveBack();
       reset();
@@ -78,22 +83,63 @@ function IngredientForm() {
       <form
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-4 px-6 pb-8 pt-4"
+        className="grid grid-cols-1 gap-4 px-6 pb-8 pt-4 lg:grid-cols-2"
       >
         <div>
           <Label htmlFor="name">Nazwa</Label>
           <Input id="name" type="text" required {...register("name")} />
         </div>
-        <div className="col-start-1">
+        <div>
           <Label htmlFor="category">Kategoria</Label>
-          <Input id="category" type="text" required {...register("category")} />
+          <ComboInput
+            control={control}
+            register={register}
+            inputId="category"
+            queryFunction={getUniqueIngredientsCategories}
+            queryKey="ingredientsCategories"
+            defaultValue={ingredient?.category}
+          />
         </div>
-        <div className="col-start-1">
+        <div>
           <Label htmlFor="unit">Jednostka</Label>
-          <Input id="unit" type="text" required {...register("unit")} />
+          <ComboInput
+            control={control}
+            register={register}
+            inputId="unit"
+            queryFunction={getUniqueUnitsList}
+            queryKey="unitsList"
+            defaultValue={ingredient?.unit}
+          />
         </div>
-
-        <Button className="ml-auto min-w-[100px]">Zapisz</Button>
+        <div>
+          <Label htmlFor="calories">Kalorie</Label>
+          <Input
+            id="calories"
+            type="number"
+            required
+            {...register("calories")}
+          />
+        </div>
+        <div>
+          <Label htmlFor="carbs">Węglowodany</Label>
+          <Input id="carbs" type="number" required {...register("carbs")} />
+        </div>
+        <div>
+          <Label htmlFor="protiens">Białko</Label>
+          <Input
+            id="proteins"
+            type="number"
+            required
+            {...register("proteins")}
+          />
+        </div>
+        <div>
+          <Label htmlFor="fat">Tłuszcz</Label>
+          <Input id="fat" type="number" required {...register("fat")} />
+        </div>
+        <Button className="ml-auto mt-auto min-w-[100px] lg:col-start-2">
+          Zapisz
+        </Button>
       </form>
     </div>
   );

@@ -7,6 +7,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { editAppointment } from "@/services/apiAppointments";
 import toast from "react-hot-toast";
 import { useNavigate, useParams } from "react-router";
+import { Textarea } from "../ui/Textarea";
 
 type AppointmentFormProps = {
   data: {
@@ -225,12 +226,11 @@ function AppointmentForm({ data }: AppointmentFormProps) {
       </div>
       <div>
         <Label htmlFor="notes">Notatki</Label>
-        <Input
+        <Textarea
           disabled={isPending}
           {...register("notes")}
           defaultValue={data.notes ? data.notes : ""}
           id="notes"
-          type="text"
         />
       </div>
 

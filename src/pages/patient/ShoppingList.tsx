@@ -24,7 +24,7 @@ function ShoppingList() {
 
     return (
       <div className="px-6 py-4">
-        <div className="flex gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row">
           <p className="text-3xl">Lista Zakupów</p>
           <Button
             onClick={() => {
@@ -41,16 +41,18 @@ function ShoppingList() {
         >
           {categoriesIngredients.map((category, i) => (
             <div
-              className="rounded-md bg-secondary-100 px-4 py-4 print:border-[1px] print:bg-transparent dark:bg-secondary-400"
+              className="rounded-md bg-secondary-100 px-4 py-4 dark:bg-secondary-400 print:border-[1px] print:bg-transparent"
               key={i}
             >
-              <p className="mb-3 text-2xl capitalize">{category.category}</p>
+              <p className="mb-3 text-2xl capitalize print:text-secondary-600">
+                {category.category}
+              </p>
 
               <div className="space-y-2">
                 {category.ingredients.map((ingredient) => (
                   <div
                     key={i}
-                    className="flex items-center justify-between border-l-2 border-l-primary-600 py-1 pl-2 print:border-none"
+                    className="flex items-center justify-between border-l-2 border-l-primary-600 py-1 pl-2 print:border-none print:text-secondary-600"
                   >
                     <p className="flex gap-2">
                       <Checkbox className="hidden size-6 print:block" />
