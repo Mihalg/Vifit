@@ -40,7 +40,7 @@ export default function PatientMenu() {
               <Link
                 to={String(meal.id)}
                 key={i}
-                className="flex justify-around gap-4 rounded-md bg-primary-600 px-2 py-2 text-center text-xl text-white transition-colors hover:bg-primary-800"
+                className="flex justify-around gap-4 rounded-md bg-secondary-400 px-2 py-2 text-center text-xl text-white transition-colors hover:bg-secondary-500"
               >
                 <p>{meal.name}</p>
                 <p>Godzina: {convertTime(meal.time)}</p>

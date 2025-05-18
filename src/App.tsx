@@ -31,6 +31,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Register from "./pages/Register";
 import Regulations from "./pages/Regulations";
 import { ThemeProvider } from "./components/ThemeProvider";
+import GenerateMenu from "./components/dietitian/GenerateMenu";
 
 const queryClient = new QueryClient();
 
@@ -74,6 +75,7 @@ function App() {
                   <Route path="baza-jadłospisów" element={<Menus />}>
                     <Route path="nowy" element={<MenusForm />} />
                     <Route path=":menuId" element={<MenusForm />} />
+                    <Route path="generuj-nowy" element={<GenerateMenu />} />
                   </Route>
 
                   <Route path=":patientId" element={<Patients />}>
