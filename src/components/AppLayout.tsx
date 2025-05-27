@@ -23,8 +23,7 @@ function AppLayout() {
 
   if (isAuthenticated)
     return (
-
-        <main >
+        <main>
           <Outlet />
         </main>
     );

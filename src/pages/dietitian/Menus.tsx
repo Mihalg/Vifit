@@ -7,13 +7,8 @@ import { capitalize } from "@/lib/utils";
 import { deleteMenu, duplicateMenu, getMenusList } from "@/services/apiMenus";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, Sparkles } from "lucide-react";
-import {
-  Outlet,
-  useLocation,
-  useNavigate,
-  useParams
-} from "react-router";
+import { ArrowUpDown } from "lucide-react";
+import { Outlet, useLocation, useParams } from "react-router";
 
 type Menu = {
   id?: number;
@@ -167,7 +162,6 @@ const columns: ColumnDef<Menu>[] = [
 ];
 
 function Menus() {
-  const navigate = useNavigate();
   const { pathname } = useLocation();
   const { menuId } = useParams();
   const { data, isLoading } = useQuery({
@@ -175,11 +169,7 @@ function Menus() {
     queryFn: getMenusList,
   });
 
-  if (
-    pathname === "/panel/baza-jad%C5%82ospis%C3%B3w/generuj-nowy" ||
-    pathname === "/panel/baza-jad%C5%82ospis%C3%B3w/nowy" ||
-    menuId
-  )
+  if (pathname === "/panel/baza-jad%C5%82ospis%C3%B3w/nowy" || menuId)
     return <Outlet />;
 
   if (isLoading) return <Loader />;
@@ -187,13 +177,6 @@ function Menus() {
   if (data)
     return (
       <div className="mt-12 sm:mt-0">
-        <Button
-          onClick={() => {
-            void navigate("generuj-nowy");
-          }}
-        >
-          Wygeneruj nowy <Sparkles />
-        </Button>
         <DataTable<Menu>
           columns={columns}
           data={data}

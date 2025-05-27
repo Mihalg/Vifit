@@ -69,6 +69,7 @@ export default function Register() {
                     required
                     maxLength={50}
                     disabled={isPending}
+                    className="dark:border-neutral-200 dark:bg-white dark:ring-offset-white dark:focus-visible:ring-primary-600"
                   />
                 </div>
                 <div className="flex shrink flex-col gap-2">
@@ -92,6 +93,7 @@ export default function Register() {
                     required
                     maxLength={50}
                     disabled={isPending}
+                    className="dark:border-neutral-200 dark:bg-white dark:ring-offset-white dark:focus-visible:ring-primary-600"
                   />
                 </div>
                 <div className="mb-3 grid gap-2">
@@ -106,6 +108,7 @@ export default function Register() {
                     minLength={8}
                     maxLength={50}
                     disabled={isPending}
+                    className="dark:border-neutral-200 dark:bg-white dark:ring-offset-white dark:focus-visible:ring-primary-600"
                   />
                 </div>
 

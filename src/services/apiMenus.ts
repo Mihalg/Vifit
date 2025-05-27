@@ -111,8 +111,10 @@ export async function addEditMenu({
       .insert(dishesToAdd)
       .select();
 
-    if (menuError || dishes_menusError)
+    if (menuError || dishes_menusError) {
+      console.error(menuError, dishes_menusError);
       throw new Error("Nie udało się dodać jadłospisu.");
+    }
 
     return data;
   } else if (menuId) {
@@ -151,9 +153,10 @@ export async function addEditMenu({
       .from("dishes_menus")
       .insert(dishesToAdd);
 
-    if (menuError || dishes_menusError || deleteIngredientsError)
-      console.error(menuError || dishes_menusError || deleteIngredientsError)
+    if (menuError || dishes_menusError || deleteIngredientsError) {
+      console.error(menuError, dishes_menusError, deleteIngredientsError);
       throw new Error("Nie udało się edytować jadłospisu.");
+    }
   }
 }
 
@@ -183,8 +186,9 @@ export async function duplicateMenu(id: number) {
     .single();
 
   if (getMenuError) {
-    console.error(getMenuError)
-    throw new Error("Nie udało się zduplikować jadłospisu");}
+    console.error(getMenuError);
+    throw new Error("Nie udało się zduplikować jadłospisu");
+  }
 
   const menuToDuplicate = {
     name: menu.name,
@@ -215,6 +219,7 @@ export async function duplicateMenu(id: number) {
     .insert(dishesToDuplicate);
 
   if (addDishesError) {
-    console.error(addDishesError)
-    throw new Error("Nie udało się zduplikować jadłospisu");}
+    console.error(addDishesError);
+    throw new Error("Nie udało się zduplikować jadłospisu");
+  }
 }

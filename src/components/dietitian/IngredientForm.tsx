@@ -33,9 +33,7 @@ function IngredientForm() {
   const moveBack = useMoveBack();
   const { ingredientId } = useParams();
 
-  const { ingredient, isLoading } = useIngredientToEdit(
-    ingredientId ? +ingredientId : null,
-  );
+  const { ingredient, isLoading } = useIngredientToEdit(ingredientId);
 
   const { register, handleSubmit, reset, control } = useForm<FormFields>({
     defaultValues: {
@@ -48,7 +46,6 @@ function IngredientForm() {
       proteins: 0,
     },
     values: ingredient,
-
   });
 
   const { mutate } = useMutation({

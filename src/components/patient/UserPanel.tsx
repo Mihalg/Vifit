@@ -10,7 +10,7 @@ function UserPanel() {
         <MainNav.NavRow to="wizyty">Wizyty</MainNav.NavRow>
         <MainNav.NavRow to="lista-zakupów">Lista zakupów</MainNav.NavRow>
       </SideBar>
-      <div className="grow">
+      <div className="grow overflow-y-auto">
         <Outlet />
       </div>
     </div>

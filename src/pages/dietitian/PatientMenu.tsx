@@ -1,4 +1,5 @@
 import { UseDarkModeContext } from "@/components/ThemeProvider";
+import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import Loader from "@/components/ui/Loader";
 import {
@@ -7,17 +8,24 @@ import {
   PopoverTrigger,
 } from "@/components/ui/Popover";
 import useDietitianId from "@/hooks/useDietitianId";
-import { convertTime } from "@/lib/utils";
+import { formatTime } from "@/lib/utils";
 import { addPatientMenu, getMealsList } from "@/services/apiMeals";
 import { getMenusList } from "@/services/apiMenus";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Sparkles } from "lucide-react";
 import { useState } from "react";
 import toast from "react-hot-toast";
-import { Link, Outlet, useLocation, useParams } from "react-router";
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router";
 
 export default function PatientMenu() {
+  const navigate = useNavigate();
   const { pathname } = useLocation();
   const { patientId, mealId } = useParams();
 
@@ -26,37 +34,68 @@ export default function PatientMenu() {
     queryFn: () => getMealsList(patientId),
   });
 
-  if (pathname.includes("nowy-posi%C5%82ek") || mealId) return <Outlet />;
+  if (
+    pathname.includes("nowy-posi%C5%82ek") ||
+    pathname.includes("generuj-nowy") ||
+    mealId
+  )
+    return <Outlet />;
 
   if (isLoading) return <Loader />;
 
   return (
-    <>
-      <SelectMenuPopover patientId={patientId} />
+    <div className="px-4 py-4">
+      <div className="flex gap-4">
+        <Button
+          onClick={() => {
+            void navigate("generuj-nowy");
+          }}
+        >
+          Wygeneruj nowy <Sparkles />
+        </Button>
+        <SelectMenuPopover patientId={patientId} />
+      </div>
       {data ? (
-        <div className="grid grid-cols-1 gap-4 px-4 py-2">
+        <div className="grid grid-cols-1 gap-4 py-4 lg:grid-cols-2">
           {data.map((meal, i) => {
             return (
               <Link
                 to={String(meal.id)}
                 key={i}
-                className="flex justify-around gap-4 rounded-md bg-secondary-400 px-2 py-2 text-center text-xl text-white transition-colors hover:bg-secondary-500"
+                className="flex flex-col gap-4 rounded-md bg-secondary-100 px-6 py-2 text-xl shadow-md transition-colors hover:bg-secondary-200 dark:bg-secondary-400 dark:text-white dark:hover:bg-secondary-500"
               >
-                <p>{meal.name}</p>
-                <p>Godzina: {convertTime(meal.time)}</p>
-                <p>Kcal: {meal.calories}</p>
+                <div className="flex justify-between border-b border-b-primary-600 py-1 text-2xl">
+                  <p>{meal.name}</p>
+                  <p>Godzina: {formatTime(meal.time)}</p>
+                  <p>{meal.calories} kcal</p>
+                </div>
+                <div className="space-y-1">
+                  {meal.meal_dishes.map((dish) => {
+                    return (
+                      <div
+                        key={dish.dish_id.id}
+                        className="flex justify-between"
+                      >
+                        <p className="max-w-[70%] overflow-clip text-ellipsis text-nowrap">
+                          {dish.dish_id.name}
+                        </p>
+                        <p>{dish.dish_id.calories} kcal</p>
+                      </div>
+                    );
+                  })}
+                </div>
               </Link>
             );
           })}
           <Link
-            className="rounded-md bg-primary-600 px-2 py-2 text-center font-medium text-white transition-colors hover:bg-primary-800"
+            className="col-start-1 rounded-md bg-primary-600 px-2 py-2 text-center font-medium text-white transition-colors hover:bg-primary-800 lg:col-end-3"
             to="nowy-posiłek"
           >
             Dodaj nowy posiłek
           </Link>
         </div>
       ) : null}
-    </>
+    </div>
   );
 }
 
@@ -80,7 +119,7 @@ function SelectMenuPopover({ patientId }: { patientId: string | undefined }) {
 
   return (
     <Popover modal={true}>
-      <PopoverTrigger className="text-primary-950 w-fit mx-4 my-2 flex items-end gap-1 text-lg md:text-xl">
+      <PopoverTrigger className="text-primary-950 mx-4 my-2 flex w-fit items-end gap-1 text-lg md:text-xl">
         <span>Wybierz gotowy jadłospis</span>
         <ChevronDown />
       </PopoverTrigger>

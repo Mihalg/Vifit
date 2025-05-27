@@ -19,7 +19,7 @@ import { Label } from "../ui/Label";
 import Loader from "../ui/Loader";
 import AddDishPopover from "./AddDishPopover";
 
-type FormFields = {
+export type Menu = {
   name: string;
   calories: number;
   carbs: number;
@@ -41,6 +41,7 @@ type FormFields = {
   }[];
 };
 
+
 export default function MenusForm() {
   const queryClient = useQueryClient();
   const dietitianId = useDietitianId();
@@ -48,7 +49,7 @@ export default function MenusForm() {
   const { menuId } = useParams();
   const { menu, isLoading } = useMenuToEdit(menuId);
 
-  const { register, handleSubmit, control, reset } = useForm<FormFields>({
+  const { register, handleSubmit, control, reset } = useForm<Menu>({
     defaultValues: {
       name: "",
       calories: 0,
@@ -84,7 +85,7 @@ export default function MenusForm() {
     },
   });
 
-  const onSubmit: SubmitHandler<FormFields> = (data) => {
+  const onSubmit: SubmitHandler<Menu> = (data) => {
     mutate({ menu: data, menuId, dietitianId });
   };
 
@@ -220,8 +221,8 @@ function NestedDishesForm({
   control,
 }: {
   mealIndex: number;
-  register: UseFormRegister<FormFields>;
-  control: Control<FormFields>;
+  register: UseFormRegister<Menu>;
+  control: Control<Menu>;
 }) {
   const {
     fields: dishesFields,

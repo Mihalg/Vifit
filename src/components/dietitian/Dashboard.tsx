@@ -38,7 +38,6 @@ function Dashboard() {
             Baza jadłospisów
           </MainNav.NavRow>
         </div>
-
         <AddPatientForm />
         <Input
           value={searchBar}
@@ -67,7 +66,7 @@ function Dashboard() {
           })}
         </div>
       </SideBar>
-      <div className="grow">
+      <div className="grow overflow-y-auto">
         <Outlet />
       </div>
     </div>

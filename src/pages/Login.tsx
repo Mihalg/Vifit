@@ -4,10 +4,10 @@ import { ArrowLeftIcon } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router";
-import { useAuth } from "../hooks/useAuth";
-import { login, recoverPassword } from "../services/apiAuth";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
+import { useAuth } from "../hooks/useAuth";
+import { login, recoverPassword } from "../services/apiAuth";
 
 function Login() {
   const queryClient = useQueryClient();
@@ -75,7 +75,11 @@ function Login() {
   if (!isAuthenticated)
     return (
       <div className="flex h-dvh flex-col items-center justify-center gap-5 bg-secondary-600 text-secondary-400">
-        <img src="/logo-light.png" alt="Logo" className="mx-auto w-80 lg:w-96 absolute top-10 lg:top-16" />
+        <img
+          src="/logo-light.png"
+          alt="Logo"
+          className="absolute top-10 mx-auto w-80 lg:top-16 lg:w-96"
+        />
         <div className="relative mx-auto min-w-80 rounded-md border bg-white px-5 py-4">
           {forgotPassword ? (
             <>
@@ -111,6 +115,7 @@ function Login() {
                       type="email"
                       required
                       disabled={isRecovering}
+                      className="dark:border-neutral-200 dark:bg-white dark:ring-offset-white dark:focus-visible:ring-primary-600"
                     />
                   </div>
                   <Button
@@ -146,6 +151,7 @@ function Login() {
                       required
                       max={50}
                       disabled={isPending}
+                      className="dark:border-neutral-200 dark:bg-white dark:ring-offset-white dark:focus-visible:ring-primary-600"
                     />
                   </div>
                   <div className="mb-3 grid gap-2">
@@ -173,6 +179,7 @@ function Login() {
                       min={8}
                       max={50}
                       disabled={isPending}
+                      className="dark:border-neutral-200 dark:bg-white dark:ring-offset-white dark:focus-visible:ring-primary-600"
                     />
                   </div>
                   <Button type="submit" className="w-full" disabled={isPending}>

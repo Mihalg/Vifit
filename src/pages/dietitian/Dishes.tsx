@@ -200,7 +200,7 @@ const columns: ColumnDef<Dish>[] = [
         return (
           <DataTableMenu
             id={row.original.id}
-            queryKey="dishes"
+            queryKey="dishesList"
             deleteFn={deleteDish}
             duplicateFn={duplicateDish}
           />

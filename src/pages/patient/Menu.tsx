@@ -15,7 +15,7 @@ function Menu() {
     return (
       <div className="px-6 py-4 ">
         <p className="text-3xl">Jadłospis</p>
-        <div className="mt-6">
+        <div className="mt-6 ">
           {data.map((meal, i) => (
             <MenuMeal key={i} meal={meal} />
           ))}

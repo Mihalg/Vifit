@@ -51,9 +51,9 @@ export function sortAppointmentsByDate(
   });
 }
 
-export function convertTime(time: string) {
-  const convertedTime = time.slice(0, -3);
-  return convertedTime;
+export function formatTime(time: string){
+  const formattedTime = +time.slice(0, 2) < 10 ? time.slice(1) : time
+  return formattedTime.slice(0, -3)
 }
 
 export function sumIngredients(
@@ -105,15 +105,25 @@ export function sumIngredients(
               },
             ],
           };
-        } else {
-          ingredientTotals[category].ingredients.forEach((ingredient) => {
-            if (ingredient.id === id) ingredient.totalQuantity += quantity;
-          });
+        } else  {
+         const matchedIngredient = ingredientTotals[category].ingredients.find((ingredient) =>  ingredient.id === id);
+
+          if(matchedIngredient){
+            matchedIngredient.totalQuantity += quantity
+          } else{
+            ingredientTotals[category].ingredients.push({
+                id,
+                name,
+                unit,
+                totalQuantity: quantity,
+              })
+          }
+
         }
       });
     });
   });
-
+console.log(Object.values(ingredientTotals));
   return Object.values(ingredientTotals);
 }
 

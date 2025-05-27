@@ -1,7 +1,7 @@
 import useDietitianId from "@/hooks/useDietitianId";
 import { useMealToEdit } from "@/hooks/useMealToEdit";
 import { useMoveBack } from "@/hooks/useMoveBack";
-import { addEditMeal } from "@/services/apiMeals";
+import { addEditMeal, deleteMeal } from "@/services/apiMeals";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, MinusIcon } from "lucide-react";
 import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
@@ -35,12 +35,14 @@ function MealForm() {
   const { meal, isLoading } = useMealToEdit(mealId);
 
   const { register, handleSubmit, control, reset } = useForm<FormFields>({
-    defaultValues: {
-      name: "",
-      time: "",
-      calories: 0,
-    },
-    values: meal
+    defaultValues: meal
+      ? meal
+      : {
+          name: "",
+          time: "",
+          calories: 0,
+        },
+    values: meal,
   });
 
   const { fields, append, remove } = useFieldArray({
@@ -61,6 +63,11 @@ function MealForm() {
     },
   });
 
+  const { mutateAsync } = useMutation({
+    mutationFn: deleteMeal,
+    onSuccess: void queryClient.invalidateQueries({ queryKey: ["meals", "1"] }),
+  });
+
   const onSubmit: SubmitHandler<FormFields> = (data) => {
     mutate({ meal: data, patientId, mealId, dietitianId });
   };
@@ -69,14 +76,31 @@ function MealForm() {
 
   return (
     <div className="max-h-[900px] scroll-mb-56 lg:overflow-y-auto">
-      <Button
-        className="ml-4 mt-4"
-        onClick={() => {
-          void moveBack();
-        }}
-      >
-        <ArrowLeft /> Powrót
-      </Button>
+      <div className="ml-6 mt-4 flex gap-6">
+        <Button
+          onClick={() => {
+            void moveBack();
+          }}
+        >
+          <ArrowLeft /> Powrót
+        </Button>
+        {mealId ? (
+          <Button
+            onClick={() => {
+              void (async () => {
+                await toast.promise(mutateAsync(mealId), {
+                  loading: "Usuwanie posiłku...",
+                  success: "Usunięto posiłek.",
+                  error: (err: Error) => err.message,
+                });
+                await moveBack();
+              })();
+            }}
+          >
+            Usuń posiłek
+          </Button>
+        ) : null}
+      </div>
       <form
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
         onSubmit={handleSubmit(onSubmit)}

@@ -6,8 +6,18 @@ export async function getMealsList(patientId: string | undefined) {
 
   const { data: meals, error } = await supabase
     .from("meals")
-    .select("id, name,calories, time")
-    .eq("patient_id", patientId);
+    .select(
+      `id, name,calories, time,  
+      meal_dishes (
+      dish_id (
+        id,
+        name,
+        calories
+      )
+    )`,
+    )
+    .eq("patient_id", patientId)
+    .order("time", { ascending: true });
 
   if (error) throw new Error("Nie udało się pobrać listy posiłków.");
 
@@ -42,7 +52,13 @@ export async function getMeal(id: string | null) {
     console.log(error);
     throw new Error("Wystąpił błąd");
   }
-  return meal;
+
+  return {
+      ...meal,
+      meal_dishes: meal.meal_dishes.map((dish) => {
+        return { ...dish.dish_id };
+      }),
+  };
 }
 
 export async function addEditMeal({
@@ -131,6 +147,17 @@ export async function addEditMeal({
     if (editMealError || deleteDishesError || meal_dishesError)
       throw new Error("Nie udało się edytować posiłku.");
   }
+}
+
+export async function deleteMeal(mealId: string | undefined){
+  if(!mealId) throw new Error ('Wystąpił błąd.')
+
+    const {error}= await supabase.from('meals').delete().eq('id', +mealId)
+
+    if(error){
+      console.error(error)
+      throw new Error('Nie udało się usunąć posiłku')
+    }
 }
 
 export async function addPatientMenu({

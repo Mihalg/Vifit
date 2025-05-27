@@ -6,17 +6,8 @@ export function useMealToEdit(mealId: string | undefined) {
     enabled: !!mealId,
     queryKey: ["meal", mealId],
     queryFn: () => getMeal(mealId ? mealId : null),
-    select: (data) => {
-      if (data) {
-        return {
-          ...data,
-          meal_dishes: data.meal_dishes.map((dish) => {
-            return { ...dish.dish_id };
-          }),
-        };
-      }
-    },
   });
 
-  return { meal, isLoading };
+   return{meal, isLoading}
+  
 }

@@ -27,6 +27,7 @@ export async function addNewPatient({
     throw new Error("Wystąpił błąd. Nie udało się dodać pacjenta.");
   }
 }
+
 export async function getPatientsList() {
   const { data: patients, error } = await supabase.from("patients").select(`
   users!patient_id (
@@ -38,4 +39,35 @@ export async function getPatientsList() {
   if (error) throw new Error("Wystąpił błąd przy pobieraniu pacjentów");
 
   return patients;
+}
+
+export async function getPatientData(patient_id: string | undefined){
+if (!patient_id)
+    throw new Error("Wystąpił błąd");
+
+  const { data: appointmentData, error:appointmentError } = await supabase
+    .from("appointments")
+    .select(
+      "age, height, weight, pal",
+    )
+    .eq("patient_id", +patient_id)
+    .order("date", { ascending: false })
+    .limit(1)
+    .single();
+
+  if (appointmentError) {
+    console.error(appointmentError);
+    if(appointmentError.code === 'PGRST116') return
+    throw new Error("Wystąpił błąd.");
+  }
+
+  const {data: usersData, error: usersError} = await supabase.from('users').select('sex').eq('id', +patient_id).single()
+
+
+  if (usersError) {
+    console.error(usersError);
+    throw new Error("Wystąpił błąd.");
+  }
+
+  return {...usersData, ...appointmentData}
 }

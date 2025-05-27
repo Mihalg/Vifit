@@ -15,7 +15,9 @@ export async function getIngredient(id: number | null) {
 
   const { data: ingredient, error } = await supabase
     .from("ingredients")
-    .select("name, category, unit, dietitian_id, carbs, fat, calories, proteins")
+    .select(
+      "name, category, unit, dietitian_id, carbs, fat, calories, proteins",
+    )
     .eq("id", id)
     .single();
 
@@ -30,7 +32,6 @@ export async function getShoppingListIngredients() {
     .select(
       "meal_dishes ( dish_id ( dish_ingredients (quantity, quantity_in_words, ingredient_id(id, category, name, unit))))",
     );
-
 
   if (error) throw new Error("Nie udało się pobrać listy zakupów");
 
@@ -70,16 +71,34 @@ export async function addEditIngredient({
   ingredientId?: string | undefined;
   dietitianId?: string | undefined;
 }) {
-
   //ADD
   if (dietitianId) {
+    const { data: existingIngredients, error: existingIngredientsError } =
+      await supabase.from("ingredients").select("name");
+
+    if (existingIngredientsError) {
+      console.error(existingIngredientsError);
+      throw new Error("Wystąpił błąd. Nie udało się dodać składnika");
+    }
+    const ingredientExists = existingIngredients
+      .map((ing) => ing.name.toLowerCase())
+      .includes(ingredient.name);
+
+    if (ingredientExists) {
+      throw new Error(`Składnik o nazwie "${ingredient.name}" już istnieje.`);
+    }
+
     const { data, error } = await supabase
       .from("ingredients")
-      .insert({...ingredient, name: ingredient.name.toLowerCase(), dietitian_id: dietitianId, })
+      .insert({
+        ...ingredient,
+        name: ingredient.name.toLowerCase(),
+        dietitian_id: dietitianId,
+      })
       .select()
       .single();
 
-    if (error) throw new Error("Nie udało się dodać składnika.");
+    if (error) throw new Error("Wystąpił błąd. Nie udało się dodać składnika.");
 
     return data;
   } else if (ingredientId) {
@@ -102,42 +121,45 @@ export async function duplicateIngredient(id: number) {
     .from("ingredients")
     .insert(ingredient);
 
-  if (insertError){
-    console.error(insertError); 
-    throw new Error('Nie udało się zduplikować składnika');}
+  if (insertError) {
+    console.error(insertError);
+    throw new Error("Nie udało się zduplikować składnika");
+  }
 }
 
-export async function getUniqueUnitsList(){
-const { data, error } = await supabase.rpc('get_unique_units')
+export async function getUniqueUnitsList() {
+  const { data, error } = await supabase.rpc("get_unique_units");
 
-  if(error){
-    console.error(error)
-    throw new Error('Nie udało się pobrać listy jednostek.')
+  if (error) {
+    console.error(error);
+    throw new Error("Nie udało się pobrać listy jednostek.");
   }
 
-  return data.map(item => {
+  return data.map((item) => {
     const objWithName = {
       id: item.id,
-      name: item.unit
-    }
+      name: item.unit,
+    };
 
-    return objWithName
-  })
+    return objWithName;
+  });
 }
-export async function getUniqueIngredientsCategories(){
-const { data, error } = await supabase.rpc('get_unique_igredients_categories')
+export async function getUniqueIngredientsCategories() {
+  const { data, error } = await supabase.rpc(
+    "get_unique_igredients_categories",
+  );
 
-  if(error){
-    console.error(error)
-    throw new Error('Nie udało się pobrać listy kategorii.')
+  if (error) {
+    console.error(error);
+    throw new Error("Nie udało się pobrać listy kategorii.");
   }
 
-  return data.map(item => {
+  return data.map((item) => {
     const objWithName = {
       id: item.id,
-      name: item.category
-    }
+      name: item.category,
+    };
 
-    return objWithName
-  })
+    return objWithName;
+  });
 }

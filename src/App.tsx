@@ -75,7 +75,6 @@ function App() {
                   <Route path="baza-jadłospisów" element={<Menus />}>
                     <Route path="nowy" element={<MenusForm />} />
                     <Route path=":menuId" element={<MenusForm />} />
-                    <Route path="generuj-nowy" element={<GenerateMenu />} />
                   </Route>
 
                   <Route path=":patientId" element={<Patients />}>
@@ -90,6 +89,7 @@ function App() {
                     <Route path="jadłospis" element={<PatientMenu />}>
                       <Route path="nowy-posiłek" element={<MealForm />} />
                       <Route path=":mealId" element={<MealForm />} />
+                      <Route path="generuj-nowy" element={<GenerateMenu />} />
                     </Route>
                   </Route>
                   <Route path="ustawienia" element={<AccountSettings />} />
