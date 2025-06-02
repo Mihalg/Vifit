@@ -64,7 +64,7 @@ export default function PatientMenu() {
                 key={i}
                 className="flex flex-col gap-4 rounded-md bg-secondary-100 px-6 py-2 text-xl shadow-md transition-colors hover:bg-secondary-200 dark:bg-secondary-400 dark:text-white dark:hover:bg-secondary-500"
               >
-                <div className="flex justify-between border-b border-b-primary-600 py-1 text-2xl">
+                <div className="flex justify-between border-b border-b-primary-600 py-1 text-xl">
                   <p>{meal.name}</p>
                   <p>Godzina: {formatTime(meal.time)}</p>
                   <p>{meal.calories} kcal</p>
@@ -74,7 +74,7 @@ export default function PatientMenu() {
                     return (
                       <div
                         key={dish.dish_id.id}
-                        className="flex justify-between"
+                        className="flex justify-between text-lg"
                       >
                         <p className="max-w-[70%] overflow-clip text-ellipsis text-nowrap">
                           {dish.dish_id.name}
@@ -124,7 +124,7 @@ function SelectMenuPopover({ patientId }: { patientId: string | undefined }) {
         <ChevronDown />
       </PopoverTrigger>
       <PopoverContent
-        className={`w-[350px] lg:w-[500px] ${isDarkModeOn ? "text-secondary-100" : ""}`}
+        className={`w-[350px] md:w-[400px] lg:w-[500px] ${isDarkModeOn ? "text-secondary-100" : ""}`}
       >
         <div>
           <Input
@@ -139,8 +139,8 @@ function SelectMenuPopover({ patientId }: { patientId: string | undefined }) {
                 : ""
             }
           />
-          <div className="flex w-full items-center justify-between rounded-sm px-2 py-1">
-            <span className="w-[150px]">Nazwa</span>
+          <div className="grid grid-cols-[200px_1fr_0.5fr_0.5fr_0.5fr] gap-1 rounded-sm px-2 py-1 text-center">
+            <span className="text-left">Nazwa</span>
             <span>Kcal</span>
             <span>W</span>
             <span>T</span>
@@ -167,9 +167,9 @@ function SelectMenuPopover({ patientId }: { patientId: string | undefined }) {
                     }}
                     title={menu.name}
                     key={i}
-                    className={`flex w-full cursor-pointer items-center justify-between rounded-sm px-2 py-1 transition-colors ${isDarkModeOn ? "hover:bg-secondary-300" : "hover:bg-primary-50"}`}
+                    className={`grid w-full cursor-pointer grid-cols-[200px_1fr_0.5fr_0.5fr_0.5fr] gap-1 rounded-sm px-2 py-1 text-center transition-colors ${isDarkModeOn ? "hover:bg-secondary-300" : "hover:bg-primary-50"}`}
                   >
-                    <span className="w-[150px] overflow-clip text-ellipsis text-nowrap text-start">
+                    <span className="overflow-clip text-ellipsis text-nowrap text-start">
                       {menu.name}
                     </span>
                     <span>{menu.calories}</span>

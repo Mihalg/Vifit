@@ -123,7 +123,7 @@ export function sumIngredients(
       });
     });
   });
-console.log(Object.values(ingredientTotals));
+
   return Object.values(ingredientTotals);
 }
 

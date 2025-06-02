@@ -104,7 +104,7 @@ function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
       </PopoverTrigger>
       <PopoverContent className="w-[375px] overflow-x-auto dark:text-secondary-100 lg:w-[450px]">
         {isFormOpen ? (
-          <div >
+          <div>
             <form
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
@@ -247,11 +247,9 @@ function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
                 if (ingredient.name.toLowerCase().includes(searchBar))
                   return (
                     <PopoverClose
+                      title={ingredient.name}
                       onClick={() => {
-                        const ingredientToAdd = {
-                          ...ingredient,
-                          quantity: 1,
-                        };
+                        const ingredientToAdd = { ...ingredient, quantity: 1 };
 
                         append(ingredientToAdd);
                       }}

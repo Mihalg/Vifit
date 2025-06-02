@@ -2,7 +2,7 @@ function PrivacyPolicy() {
   return (
     <div className="flex min-h-screen items-center">
       <div className="mx-auto max-w-[1200px] space-y-4 rounded bg-secondary-400 px-6 py-4 lg:my-6">
-        <h1 className="text-2xl">Polityka prywatności aplikacji NutriPath</h1>
+        <h1 className="text-2xl">Polityka prywatności aplikacji ViFit</h1>
         <p>Ostatnia aktualizacja: 25.04.2025</p>
 
         <p>
@@ -18,7 +18,7 @@ function PrivacyPolicy() {
 
         <h2>1. Jakie dane zbieramy</h2>
         <ul>
-          <li>Imię i nazwisko użytkownika (dietetyka/trenera)</li>
+          <li>Imię i nazwisko użytkownika</li>
           <li>Adres e-mail</li>
           <li>
             Dane zdrowotne pacjentów wprowadzane przez użytkowników (np. masa
@@ -51,7 +51,7 @@ function PrivacyPolicy() {
         </p>
         <p>
           Wysyłka e-maili (np. potwierdzenie rejestracji, przypomnienie hasła)
-          może odbywać się przez usługę SendGrid.
+          może odbywać się przez usługę Resend.
         </p>
 
         <h2>4. Twoje prawa</h2>

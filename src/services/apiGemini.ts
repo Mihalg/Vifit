@@ -301,6 +301,7 @@ export function createRelations({
     for (const dish of meal.dishes) {
       const dishMatch = insertedDishes[dishIndex];
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!dishMatch) continue;
 
       dishesMenus.push({

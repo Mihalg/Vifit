@@ -7,12 +7,12 @@ function DishesLayout() {
         <div className="flex w-fit gap-2 rounded-md bg-secondary-200 px-1 py-1 dark:bg-secondary-400">
           <NavLink
             to="posiłki"
-            className="topBar-navlink rounded-md px-4 py-2 font-semibold transition-colors"
+            className="topBar-navlink rounded-md px-4 py-2 transition-colors"
           >
             Posiłki
           </NavLink>
           <NavLink
-            className="topBar-navlink rounded-md px-4 py-2 font-semibold transition-colors"
+            className="topBar-navlink rounded-md px-4 py-2 transition-colors"
             to="składniki"
           >
             Składniki

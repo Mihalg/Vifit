@@ -27,7 +27,10 @@ function MenuMeal({ meal }: MenuMealProps) {
     setIsModalOpen(false);
   });
 
-  const [selectedDish, setSelectedDish] = useState(0);
+  const date = new Date().getDate();
+  const [selectedDish, setSelectedDish] = useState(
+    date % meal.meal_dishes.length,
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
@@ -39,7 +42,7 @@ function MenuMeal({ meal }: MenuMealProps) {
           ref={ref}
           className={`absolute left-1/2 top-1/2 flex max-h-[75%] w-3/4 -translate-x-1/2 -translate-y-1/2 flex-col items-start rounded-md bg-secondary-50 px-8 py-4 dark:border-none dark:bg-secondary-500 lg:w-fit`}
         >
-          <div className="w-full divide-y-2 overflow-y-auto divide-primary-600">
+          <div className="w-full divide-y-2 divide-primary-600 overflow-y-auto">
             {meal.meal_dishes.map((dish, i) => (
               <button
                 className="w-full px-2 py-2 text-left text-lg transition-colors hover:bg-primary-600 hover:text-white"
@@ -85,7 +88,7 @@ function MenuMeal({ meal }: MenuMealProps) {
             {meal.meal_dishes.at(selectedDish)?.dish_id.name}
           </p>
 
-          <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 lg:justify-between">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:justify-between">
             <div>
               <p className="mb-1 text-lg">Składniki:</p>
               {meal.meal_dishes
@@ -93,14 +96,14 @@ function MenuMeal({ meal }: MenuMealProps) {
                 ?.dish_id.dish_ingredients.map((ingredient, i) => (
                   <div
                     key={i}
-                    className="mb-2 grid grid-cols-3 border-l-2 border-primary-600 py-1 pl-2"
+                    className="mb-2 grid grid-cols-[1fr_0.2fr_0.6fr] border-l-2 border-primary-600 py-1 pl-2"
                   >
                     <p>{capitalize(ingredient.ingredient_id.name)}</p>
                     <p>
                       {ingredient.quantity}
                       {ingredient.ingredient_id.unit}
                     </p>
-                    <p>{ingredient.quantity_in_words}</p>
+                    <p className="text-right">{ingredient.quantity_in_words}</p>
                   </div>
                 ))}
             </div>

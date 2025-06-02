@@ -10,41 +10,26 @@ import { ProcessedEvent } from "@aldabil/react-scheduler/types";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { pl } from "date-fns/locale/pl";
+import { ReactNode } from "react";
 import toast from "react-hot-toast";
 
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
-    primary: {
-      main: "#4f46e5",
-    },
-    secondary: {
-      main: "#4f46e5",
-    },
-    grey: {
-      "300": "#696969",
-    },
-    background: {
-      paper: "#161617",
-    },
-    error: {
-      main: "#fc6c2d",
-    },
+    primary: { main: "#4f46e5" },
+    secondary: { main: "#4f46e5" },
+    background: { paper: "#161617" },
+    grey: { 300: "#696969" },
+    error: { main: "#fc6c2d" },
   },
 });
 
 const lightTheme = createTheme({
   palette: {
     mode: "light",
-    primary: {
-      main: "#4f46e5",
-    },
-    secondary: {
-      main: "#4f46e5",
-    },
-    error: {
-      main: "#4f46e5",
-    },
+    primary: { main: "#4f46e5" },
+    secondary: { main: "#4f46e5" },
+    error: { main: "#fc6c2d" },
   },
 });
 
@@ -89,18 +74,17 @@ function PlannedAppointments() {
             const { data } = await refetch();
             return data;
           }}
-          onDelete={(eventId) => handleDelete(eventId)}
-          onConfirm={async (event) =>
-            await handleAddEdit({ dietitianId, event })
-          }
+          onDelete={(eventId: string) => handleDelete(eventId)}
+          onConfirm={(event: {
+            event_id?: number | string;
+            start: Date;
+            end: Date;
+            title: ReactNode;
+            subtitle?: ReactNode;
+          }) => handleAddEdit({ dietitianId, event })}
           timeZone="CET"
           locale={pl}
-          day={{
-            startHour: 7,
-            endHour: 21,
-            step: 60,
-            navigation: true,
-          }}
+          day={{ startHour: 7, endHour: 21, step: 60, navigation: true }}
           week={{
             weekDays: [0, 1, 2, 3, 4, 5, 6],
             weekStartOn: 1,

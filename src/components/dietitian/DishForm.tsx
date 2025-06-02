@@ -8,7 +8,13 @@ import {
 } from "@/services/apiDishes";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, MinusIcon } from "lucide-react";
-import { SubmitHandler, useFieldArray, useForm } from "react-hook-form";
+import { useEffect } from "react";
+import {
+  SubmitHandler,
+  useFieldArray,
+  useForm,
+  useWatch,
+} from "react-hook-form";
 import toast from "react-hot-toast";
 import { useParams } from "react-router";
 import { Button } from "../ui/Button";
@@ -49,8 +55,8 @@ function DishForm() {
   const { dishId } = useParams();
   const { dish, isLoading } = useDishToEdit(dishId);
 
-  const { register, handleSubmit, control, reset, watch } = useForm<FormFields>(
-    {
+  const { register, handleSubmit, control, reset, watch, setValue } =
+    useForm<FormFields>({
       values: dish || {
         name: "",
         category: "",
@@ -62,8 +68,7 @@ function DishForm() {
         proteins: 0,
         ingredients: [],
       },
-    },
-  );
+    });
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -90,34 +95,31 @@ function DishForm() {
     mutate({ dish: data, dishId, dietitianId });
   };
 
+  const ingredients = useWatch({ control, name: "ingredients" });
+
+  useEffect(() => {
+    const total = ingredients.reduce(
+      (acc, item) => {
+        const q = Number(item.quantity) || 0;
+        acc.calories += (Number(item.calories) / 100) * q;
+        acc.carbs += (Number(item.carbs) / 100) * q;
+        acc.proteins += (Number(item.proteins) / 100) * q;
+        acc.fat += (Number(item.fat) / 100) * q;
+        return acc;
+      },
+      { calories: 0, carbs: 0, proteins: 0, fat: 0 },
+    );
+
+    setValue("calories", Math.round(total.calories));
+    setValue("carbs", Math.round(total.carbs));
+    setValue("proteins", Math.round(total.proteins));
+    setValue("fat", Math.round(total.fat));
+  }, [ingredients, setValue]);
+
   if (isLoading) return <Loader />;
 
-  const calories = Math.round(
-    watch("ingredients").reduce((acc, field) => {
-      return acc + (field.calories / 100) * field.quantity;
-    }, 0),
-  );
-
-  const carbs = Math.round(
-    watch("ingredients").reduce((acc, field) => {
-      return acc + (field.carbs / 100) * field.quantity;
-    }, 0),
-  );
-
-  const proteins = Math.round(
-    watch("ingredients").reduce((acc, field) => {
-      return acc + (field.proteins / 100) * field.quantity;
-    }, 0),
-  );
-
-  const fat = Math.round(
-    watch("ingredients").reduce((acc, field) => {
-      return acc + (field.fat / 100) * field.quantity;
-    }, 0),
-  );
-
   return (
-    <div className="max-h-[900px] scroll-mb-56 lg:overflow-y-auto">
+    <div className="scroll-mb-56">
       <Button
         className="ml-4 mt-4"
         onClick={() => {
@@ -167,7 +169,6 @@ function DishForm() {
               type="number"
               required
               {...register("calories")}
-              value={calories}
               disabled
             />
           </div>
@@ -178,7 +179,6 @@ function DishForm() {
               type="number"
               required
               {...register("carbs")}
-              value={carbs}
               disabled
             />
           </div>
@@ -189,7 +189,6 @@ function DishForm() {
               type="number"
               required
               {...register("proteins")}
-              value={proteins}
               disabled
             />
           </div>
@@ -200,7 +199,6 @@ function DishForm() {
               type="number"
               required
               {...register("fat")}
-              value={fat}
               disabled
             />
           </div>
@@ -313,7 +311,7 @@ function DishForm() {
                 <Label htmlFor={`ingredients.${i}.quantity`}>Ilość</Label>
                 <Input
                   id={`ingredients.${i}.quantity`}
-                  type="text"
+                  type="number"
                   required
                   {...register(`ingredients.${i}.quantity`)}
                 />

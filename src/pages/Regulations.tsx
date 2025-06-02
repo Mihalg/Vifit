@@ -2,13 +2,13 @@ function Regulations() {
   return (
     <div className="flex min-h-screen items-center">
       <div className="mx-auto max-w-[1200px] space-y-4 rounded bg-secondary-400 px-6 py-4">
-        <h1 className="text-2xl">Regulamin aplikacji NutriPath</h1>
+        <h1 className="text-2xl">Regulamin aplikacji ViFit</h1>
         <p>Ostatnia aktualizacja: 25.04.2025</p>
 
         <h2>§1. Postanowienia ogólne</h2>
         <ol>
           <li>
-            Aplikacja NutriPath jest prowadzona przez Michała Grembockiego jako
+            Aplikacja ViFit jest prowadzona przez Michała Grembockiego jako
             osoba fizyczna.
           </li>
           <li>

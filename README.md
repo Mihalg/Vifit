@@ -1,13 +1,13 @@
-# 🥗 VitaFit
+# 🥗 ViFit
 
-**VitaFit** is a web application designed for dietitians and their clients. It helps manage nutrition plans, track progress, and streamline collaboration between professionals and patients.
+**ViFit** is a web application designed for dietitians and their clients. It helps manage nutrition plans, track progress, and streamline collaboration between professionals and patients.
 
 ## ✨ Features
 
 - Account registration and login for dietitians and clients
 - Patient management dashboard for dietitians
 - Input and review of patients' health data
-- Custom meal plans and workout schedules
+- Generating custom meal plans with AI 
 - Progress tracking with interactive charts (e.g., weight, BMI)
 - Clean, responsive, and accessible UI
 

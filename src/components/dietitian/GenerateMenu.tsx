@@ -1,5 +1,8 @@
+import useDietitianId from "@/hooks/useDietitianId";
 import { useMoveBack } from "@/hooks/useMoveBack";
+import { useOutsideClick } from "@/hooks/useOutsideClick";
 import { UsePatientData } from "@/hooks/usePatientData";
+import { capitalize } from "@/lib/utils";
 import {
   AddGeneratedMenu,
   GeminiResponse,
@@ -15,9 +18,6 @@ import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
 import { Label } from "../ui/Label";
 import Loader from "../ui/Loader";
-import { useOutsideClick } from "@/hooks/useOutsideClick";
-import { capitalize, formatTime } from "@/lib/utils";
-import useDietitianId from "@/hooks/useDietitianId";
 
 type Meal = {
   name: string;
@@ -29,22 +29,15 @@ type Meal = {
     category: string;
     calories: number;
     description: string;
-    macronutrients: {
-      carbs: number;
-      fat: number;
-      proteins: number;
-    };
+    macronutrients: { carbs: number; fat: number; proteins: number };
     ingredients: {
       name: string;
+      unit: string;
       category: string;
       quantity: string;
       quantityInWords: string;
       calories: number;
-      macronutrients: {
-        carbs: number;
-        fat: number;
-        proteins: number;
-      };
+      macronutrients: { carbs: number; fat: number; proteins: number };
     }[];
   }[];
 };
@@ -294,13 +287,17 @@ function GeneratedMenuPresentation({
         <p>Tłuszcz: {menu.macronutrients.fat}</p>
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         {menu.meals.map((meal, i) => (
           <MenuMeal meal={meal} key={i} />
         ))}
       </div>
 
-      <Button disabled={isPending} onClick={onSubmit}>
+      <Button
+        className="ml-auto mt-4 block"
+        disabled={isPending}
+        onClick={onSubmit}
+      >
         Zapisz
       </Button>
     </div>
@@ -350,10 +347,11 @@ function MenuMeal({ meal }: { meal: Meal }) {
       </div>
 
       <div className="rounded-md bg-secondary-100 px-4 py-4 dark:bg-secondary-400">
-        <div className="flex flex-col items-center gap-4 text-3xl md:flex-row">
+        <div className="flex flex-col items-center gap-4 text-2xl md:flex-row">
           <div className="flex gap-4">
             <p>{capitalize(meal.name)}</p>
-            <p>{formatTime(meal.time)}</p>
+            <p>{meal.time}</p>
+            <p>{meal.calories} Kcal</p>
           </div>
           <Button
             onClick={() => {
@@ -366,11 +364,11 @@ function MenuMeal({ meal }: { meal: Meal }) {
         </div>
 
         <div>
-          <p className="my-3 text-2xl text-primary-600 dark:text-primary-50">
+          <p className="my-3 text-xl text-primary-600 dark:text-primary-50">
             {meal.dishes?.at(selectedDish)?.name}
           </p>
 
-          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:justify-between">
+          <div className=" grid grid-cols-1 gap-6 lg:grid-cols-[1fr_0.8fr]">
             <div>
               <p className="mb-1 text-lg">Składniki:</p>
               {meal.dishes
@@ -378,11 +376,14 @@ function MenuMeal({ meal }: { meal: Meal }) {
                 ?.ingredients.map((ingredient, i) => (
                   <div
                     key={i}
-                    className="mb-2 flex justify-between border-l-2 border-primary-600 py-1 pl-2"
+                    className="mb-2 grid grid-cols-[1fr_15px_120px] gap-2 border-l-2 border-primary-600 py-1 pl-2"
                   >
                     <p>{capitalize(ingredient.name)}</p>
-                    <p>{ingredient.quantity}</p>
-                    <p>{ingredient.quantityInWords}</p>
+                    <p>
+                      {ingredient.quantity}
+                      {ingredient.unit}
+                    </p>
+                    <p className="ml-auto">{ingredient.quantityInWords}</p>
                   </div>
                 ))}
             </div>

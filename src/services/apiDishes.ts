@@ -77,6 +77,8 @@ export async function addEditDish({
   dishId: string | undefined;
   dietitianId: string | undefined;
 }) {
+  console.log(dish);
+
   //ADD
   if (!dishId && dietitianId) {
     const dishToAdd = {
@@ -219,38 +221,32 @@ export async function duplicateDish(id: number) {
   if (addIngredientsError) throw new Error("Nie udało się zduplikować posiłku");
 }
 
-export async function getUniqueCategoriesList(){
-const { data, error } = await supabase.rpc('get_unique_categories')
+export async function getUniqueCategoriesList() {
+  const { data, error } = await supabase.rpc("get_unique_categories");
 
-  if(error){
-    console.error(error)
-    throw new Error('Nie udało się pobrać listy kategorii.')
+  if (error) {
+    console.error(error);
+    throw new Error("Nie udało się pobrać listy kategorii.");
   }
 
-  return data.map(item => {
-    const objWithName = {
-      id: item.id,
-      name: item.category
-    }
+  return data.map((item) => {
+    const objWithName = { id: item.id, name: item.category };
 
-    return objWithName
-  })
+    return objWithName;
+  });
 }
 
-export async function getUniqueGroupsList(){
-const { data, error } = await supabase.rpc('get_unique_groups')
+export async function getUniqueGroupsList() {
+  const { data, error } = await supabase.rpc("get_unique_groups");
 
-  if(error){
-    console.error(error)
-    throw new Error('Nie udało się pobrać listy grup.')
+  if (error) {
+    console.error(error);
+    throw new Error("Nie udało się pobrać listy grup.");
   }
 
-  return data.map(item => {
-    const objWithName = {
-      id: item.id,
-      name: item.group
-    }
+  return data.map((item) => {
+    const objWithName = { id: item.id, name: item.group };
 
-    return objWithName
-  })
+    return objWithName;
+  });
 }

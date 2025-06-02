@@ -136,10 +136,7 @@ export async function getUniqueUnitsList() {
   }
 
   return data.map((item) => {
-    const objWithName = {
-      id: item.id,
-      name: item.unit,
-    };
+    const objWithName = { id: item.id, name: item.unit };
 
     return objWithName;
   });
@@ -155,10 +152,7 @@ export async function getUniqueIngredientsCategories() {
   }
 
   return data.map((item) => {
-    const objWithName = {
-      id: item.id,
-      name: item.category,
-    };
+    const objWithName = { id: item.id, name: item.category };
 
     return objWithName;
   });

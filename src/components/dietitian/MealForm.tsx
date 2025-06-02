@@ -75,7 +75,7 @@ function MealForm() {
   if (isLoading) return <Loader />;
 
   return (
-    <div className="max-h-[900px] scroll-mb-56 lg:overflow-y-auto">
+    <div className="scroll-mb-56">
       <div className="ml-6 mt-4 flex gap-6">
         <Button
           onClick={() => {

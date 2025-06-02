@@ -7,14 +7,8 @@ import { editPassword } from "@/services/apiAuth";
 import toast from "react-hot-toast";
 
 function AccountSettings() {
-  const { mutate, isPending } = useMutation({
+  const { mutateAsync, isPending } = useMutation({
     mutationFn: editPassword,
-    onSuccess: () => {
-      toast.success("Zmieniono hasło");
-    },
-    onError: (err) => {
-      toast.error(err.message);
-    },
   });
 
   const [password, setPassword] = useState("");
@@ -25,7 +19,11 @@ function AccountSettings() {
       <p className="mb-7 text-3xl">Ustawienia konta</p>
       <form
         onSubmit={() => {
-          mutate(confirmPassword);
+          void toast.promise(mutateAsync(password), {
+            success: "Zmieniono hasło.",
+            loading: "Zmiania hasła...",
+            error: "Wystąpił błąd. Nie udało się zmienić hasła.",
+          });
         }}
         className="rounded-md px-4 py-4 shadow-md"
       >

@@ -1,9 +1,12 @@
 import { Button } from "@/components/ui/Button";
 import { Checkbox } from "@/components/ui/Checkbox";
 import Loader from "@/components/ui/Loader";
+import { Popover } from "@/components/ui/Popover";
 import { sumIngredients } from "@/lib/utils";
 import { getShoppingListIngredients } from "@/services/apiIngredients";
+import { PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
 import { useQuery } from "@tanstack/react-query";
+import { InfoIcon } from "lucide-react";
 import { useRef } from "react";
 import { useReactToPrint } from "react-to-print";
 
@@ -12,6 +15,8 @@ function ShoppingList() {
     queryKey: ["shoppingList"],
     queryFn: getShoppingListIngredients,
   });
+
+  console.log(data);
 
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -24,7 +29,7 @@ function ShoppingList() {
 
     return (
       <div className="px-6 py-4">
-        <div className="flex flex-col gap-4 sm:flex-row">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           <p className="text-3xl">Lista Zakupów</p>
           <Button
             onClick={() => {
@@ -33,6 +38,18 @@ function ShoppingList() {
           >
             Drukuj
           </Button>
+
+          <Popover>
+            <PopoverTrigger>
+              <InfoIcon />
+            </PopoverTrigger>
+            <PopoverContent className="max-w-[250px] rounded-sm bg-primary-100 p-2 shadow-md dark:bg-secondary-500">
+              <p>
+                Lista zakupów to suma składników potrzebnych do
+                przygotowania każdego dania z jadłospisu jeden raz.
+              </p>
+            </PopoverContent>
+          </Popover>
         </div>
 
         <div
@@ -49,7 +66,7 @@ function ShoppingList() {
               </p>
 
               <div className="space-y-2">
-                {category.ingredients.map((ingredient) => (
+                {category.ingredients.map((ingredient, i) => (
                   <div
                     key={i}
                     className="flex items-center justify-between border-l-2 border-l-primary-600 py-1 pl-2 print:border-none print:text-secondary-600"

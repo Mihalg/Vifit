@@ -54,10 +54,10 @@ export async function getMeal(id: string | null) {
   }
 
   return {
-      ...meal,
-      meal_dishes: meal.meal_dishes.map((dish) => {
-        return { ...dish.dish_id };
-      }),
+    ...meal,
+    meal_dishes: meal.meal_dishes.map((dish) => {
+      return { ...dish.dish_id };
+    }),
   };
 }
 
@@ -101,10 +101,7 @@ export async function addEditMeal({
       .single();
 
     const dishesToAdd = meal.meal_dishes.map((dish) => {
-      return {
-        meal_id: data?.id,
-        dish_id: dish.id,
-      };
+      return { meal_id: data?.id, dish_id: dish.id };
     });
 
     const { error: meal_dishesError } = await supabase
@@ -134,10 +131,7 @@ export async function addEditMeal({
       .eq("meal_id", +mealId);
 
     const dishesToAdd = meal.meal_dishes.map((dish) => {
-      return {
-        meal_id: +mealId,
-        dish_id: dish.id,
-      };
+      return { meal_id: +mealId, dish_id: dish.id };
     });
 
     const { error: meal_dishesError } = await supabase
@@ -149,15 +143,15 @@ export async function addEditMeal({
   }
 }
 
-export async function deleteMeal(mealId: string | undefined){
-  if(!mealId) throw new Error ('Wystąpił błąd.')
+export async function deleteMeal(mealId: string | undefined) {
+  if (!mealId) throw new Error("Wystąpił błąd.");
 
-    const {error}= await supabase.from('meals').delete().eq('id', +mealId)
+  const { error } = await supabase.from("meals").delete().eq("id", +mealId);
 
-    if(error){
-      console.error(error)
-      throw new Error('Nie udało się usunąć posiłku')
-    }
+  if (error) {
+    console.error(error);
+    throw new Error("Nie udało się usunąć posiłku");
+  }
 }
 
 export async function addPatientMenu({
@@ -244,6 +238,5 @@ export async function getPatientMeals() {
     );
 
   if (error) throw new Error("Nie udało się pobrać jadłospisu");
-
   return meals;
 }

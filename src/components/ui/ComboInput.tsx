@@ -23,10 +23,7 @@ import {
   UseFormRegister,
 } from "react-hook-form";
 
-type Option = {
-  id: number;
-  name: string;
-};
+type Option = { id: number; name: string };
 
 type ComboInputProps<FormFields extends FieldValues> = {
   queryKey: string;
@@ -54,10 +51,7 @@ export default function ComboInput<FormFields extends FieldValues>({
     rules: { required: true },
   });
 
-  const { data } = useQuery({
-    queryKey: [queryKey],
-    queryFn: queryFunction,
-  });
+  const { data } = useQuery({ queryKey: [queryKey], queryFn: queryFunction });
 
   useEffect(() => {
     if (data) setOptions(data);
@@ -96,7 +90,7 @@ export default function ComboInput<FormFields extends FieldValues>({
         <Command className="p-0">
           <CommandInput placeholder="Szukaj..." />
           <CommandEmpty>Brak wyników.</CommandEmpty>
-          <CommandGroup>
+          <CommandGroup className="max-h-[250px] overflow-auto">
             {options.map((option) => (
               <CommandItem
                 key={option.id}
