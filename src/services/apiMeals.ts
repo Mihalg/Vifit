@@ -24,6 +24,7 @@ export async function getMealsList(patientId: string | undefined) {
   return meals;
 }
 
+
 export async function getMeal(id: string | null) {
   if (!id) return;
   const { data: meal, error } = await supabase
@@ -53,6 +54,8 @@ export async function getMeal(id: string | null) {
     throw new Error("Wystąpił błąd");
   }
 
+
+   console.log(meal);
   return {
     ...meal,
     meal_dishes: meal.meal_dishes.map((dish) => {
@@ -60,6 +63,7 @@ export async function getMeal(id: string | null) {
     }),
   };
 }
+
 
 export async function addEditMeal({
   meal,

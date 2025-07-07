@@ -114,13 +114,17 @@ export default function Register() {
 
                 <div className="flex">
                   <Input required type="checkbox" className="mr-4 h-6 w-6" />
-                  <Link to="/polityka-prywatnosci" className="underline">
+                  <Link
+                    target="blank"
+                    to="/polityka-prywatnosci"
+                    className="underline"
+                  >
                     Akceptuję politykę prywatności
                   </Link>
                 </div>
                 <div className="flex">
                   <Input required type="checkbox" className="mr-4 h-6 w-6" />
-                  <Link to="/regulamin" className="underline">
+                  <Link target="blank" to="/regulamin" className="underline">
                     Akceptuję regulamin
                   </Link>
                 </div>

@@ -1,5 +1,5 @@
 import { Outlet } from "react-router";
-import SideBar from "../SideBar";
+import SideBar from "../common/SideBar";
 import MainNav from "../navigation/MainNav";
 import AddPatientForm from "./AddPatientForm";
 import { Input } from "../ui/Input";

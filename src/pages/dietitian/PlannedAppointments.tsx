@@ -1,4 +1,4 @@
-import { UseDarkModeContext } from "@/components/ThemeProvider";
+import { UseDarkModeContext } from "@/components/common/ThemeProvider";
 import useDietitianId from "@/hooks/useDietitianId";
 import {
   createEditEvent,

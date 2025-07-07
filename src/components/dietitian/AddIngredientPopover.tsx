@@ -8,7 +8,7 @@ import {
 import { PopoverClose } from "@radix-ui/react-popover";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeftIcon, ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { SubmitHandler, UseFieldArrayAppend, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { Button } from "../ui/Button";
@@ -55,7 +55,7 @@ type FormFields = {
   fat: number;
 };
 
-function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
+const AddIngredientPopover = memo(function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
   const queryClient = useQueryClient();
   const id = useDietitianId();
 
@@ -275,6 +275,6 @@ function AddIngredientPopover({ append }: AddIngredientPopoverProps) {
       </PopoverContent>
     </Popover>
   );
-}
+})
 
 export default AddIngredientPopover;

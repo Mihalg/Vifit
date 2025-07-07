@@ -65,7 +65,7 @@ function MealForm() {
 
   const { mutateAsync } = useMutation({
     mutationFn: deleteMeal,
-    onSuccess: void queryClient.invalidateQueries({ queryKey: ["meals", "1"] }),
+    onSuccess: void queryClient.invalidateQueries({ queryKey: ["meals", patientId] }),
   });
 
   const onSubmit: SubmitHandler<FormFields> = (data) => {

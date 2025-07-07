@@ -1,4 +1,3 @@
-import { UseDarkModeContext } from "@/components/ThemeProvider";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import Loader from "@/components/ui/Loader";
@@ -45,7 +44,7 @@ export default function PatientMenu() {
 
   return (
     <div className="px-4 py-4">
-      <div className="flex gap-4">
+      <div className="flex flex-wrap gap-4">
         <Button
           onClick={() => {
             void navigate("generuj-nowy");
@@ -103,7 +102,6 @@ function SelectMenuPopover({ patientId }: { patientId: string | undefined }) {
   const [searchBar, setSearchBar] = useState("");
   const dietitianId = useDietitianId();
   const queryClient = useQueryClient();
-  const { isDarkModeOn } = UseDarkModeContext();
 
   const { data: menus } = useQuery({
     queryKey: ["menusList"],
@@ -123,21 +121,15 @@ function SelectMenuPopover({ patientId }: { patientId: string | undefined }) {
         <span>Wybierz gotowy jadłospis</span>
         <ChevronDown />
       </PopoverTrigger>
-      <PopoverContent
-        className={`w-[350px] md:w-[400px] lg:w-[500px] ${isDarkModeOn ? "text-secondary-100" : ""}`}
-      >
-        <div>
+      <PopoverContent className="w-[350px] overflow-x-auto dark:text-secondary-100 lg:w-[550px]">
+        <div className="min-w-[500px]">
           <Input
             value={searchBar}
             onChange={(e) => {
               setSearchBar(e.target.value);
             }}
             placeholder="Wyszukaj nazwę"
-            className={
-              isDarkModeOn
-                ? "border-neutral-800 bg-neutral-600 ring-offset-neutral-950 file:text-neutral-50 placeholder:text-neutral-400 focus-visible:ring-neutral-300"
-                : ""
-            }
+            className="ring-offset-neutral-950 dark:border-neutral-800 dark:bg-neutral-600 dark:file:text-neutral-50 dark:placeholder:text-neutral-400 dark:focus-visible:ring-neutral-300"
           />
           <div className="grid grid-cols-[200px_1fr_0.5fr_0.5fr_0.5fr] gap-1 rounded-sm px-2 py-1 text-center">
             <span className="text-left">Nazwa</span>
@@ -167,7 +159,7 @@ function SelectMenuPopover({ patientId }: { patientId: string | undefined }) {
                     }}
                     title={menu.name}
                     key={i}
-                    className={`grid w-full cursor-pointer grid-cols-[200px_1fr_0.5fr_0.5fr_0.5fr] gap-1 rounded-sm px-2 py-1 text-center transition-colors ${isDarkModeOn ? "hover:bg-secondary-300" : "hover:bg-primary-50"}`}
+                    className="grid w-full cursor-pointer grid-cols-[200px_1fr_0.5fr_0.5fr_0.5fr] gap-1 rounded-sm px-2 py-1 text-center transition-colors hover:bg-primary-50 dark:hover:bg-secondary-300"
                   >
                     <span className="overflow-clip text-ellipsis text-nowrap text-start">
                       {menu.name}

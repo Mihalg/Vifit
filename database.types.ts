@@ -333,9 +333,9 @@ export type Database = {
         };
         Update: {
           created_at?: string;
-          dietitian_id?: string | null;
+          dietitian_id?: string ;
           id?: number;
-          patient_id?: string | null;
+          patient_id?: string ;
         };
         Relationships: [
           {

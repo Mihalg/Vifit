@@ -3,17 +3,17 @@ import { getDishesList } from "@/services/apiDishes";
 import { PopoverClose } from "@radix-ui/react-popover";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { UseFieldArrayAppend } from "react-hook-form";
 import { Input } from "../ui/Input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/Popover";
-import { UseDarkModeContext } from "../ThemeProvider";
 
 type AddDishPopoverProps = { append: UseFieldArrayAppend<any> };
 
-function AddDishPopover({ append }: AddDishPopoverProps) {
+const AddDishPopover = memo(function AddDishPopover({
+  append,
+}: AddDishPopoverProps) {
   const [searchBar, setSearchBar] = useState("");
-  const { isDarkModeOn } = UseDarkModeContext();
 
   const { data: dishes } = useQuery({
     queryKey: ["dishes"],
@@ -34,7 +34,6 @@ function AddDishPopover({ append }: AddDishPopoverProps) {
               setSearchBar(e.target.value);
             }}
             placeholder="Wyszukaj nazwę"
-            // className="dark:border-neutral-800 bg-neutral-600 ring-offset-neutral-950 file:text-neutral-50 placeholder:text-neutral-400 focus-visible:ring-neutral-300"
           />
           <div className="grid w-full grid-cols-[120px_0.6fr_0.45fr_0.22fr_0.15fr_0.15fr_0.15fr] rounded-sm px-2 py-1 text-center">
             <span className="text-left">Nazwa</span>
@@ -55,9 +54,9 @@ function AddDishPopover({ append }: AddDishPopoverProps) {
                       append(dish);
                     }}
                     key={i}
-                    className={`grid items-center w-full cursor-pointer grid-cols-[120px_0.6fr_0.45fr_0.22fr_0.15fr_0.15fr_0.15fr] rounded-sm px-2 py-1 transition-colors ${isDarkModeOn ? "hover:bg-secondary-300" : "hover:bg-primary-50"}`}
+                    className="grid w-full cursor-pointer grid-cols-[120px_0.6fr_0.45fr_0.22fr_0.15fr_0.15fr_0.15fr] items-center rounded-sm px-2 py-1 transition-colors hover:bg-primary-50 dark:hover:bg-secondary-300"
                   >
-                    <span className=" overflow-clip text-ellipsis text-nowrap text-start">
+                    <span className="overflow-clip text-ellipsis text-nowrap text-start">
                       {dish.name}
                     </span>
                     <span>{dish.group}</span>
@@ -74,6 +73,6 @@ function AddDishPopover({ append }: AddDishPopoverProps) {
       </PopoverContent>
     </Popover>
   );
-}
+});
 
 export default AddDishPopover;

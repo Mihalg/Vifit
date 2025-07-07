@@ -3,7 +3,8 @@ import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "react-error-boundary";
 import App from "./App.tsx";
 import "./index.css";
-import ErrorFalback from "./components/ErrorFalback.tsx";
+import ErrorFalback from "./components/common/ErrorFalback.tsx";
+
 
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 createRoot(document.getElementById("root")!).render(

@@ -72,7 +72,7 @@ export async function addEditIngredient({
   dietitianId?: string | undefined;
 }) {
   //ADD
-  if (dietitianId) {
+  if (dietitianId && !ingredientId) {
     const { data: existingIngredients, error: existingIngredientsError } =
       await supabase.from("ingredients").select("name");
 

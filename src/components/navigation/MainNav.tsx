@@ -5,7 +5,7 @@ import { createContext, PropsWithChildren, ReactNode, useContext } from "react";
 import { NavLink, useNavigate } from "react-router";
 import Logo from "../ui/Logo";
 import LogoutButton from "../ui/LogoutButton";
-import { UseDarkModeContext } from "../ThemeProvider";
+import { UseDarkModeContext } from "../common/ThemeProvider";
 
 type MainNavContext = { toggleMenu: () => void };
 

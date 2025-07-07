@@ -1,7 +1,7 @@
+import { useAuth } from "@/hooks/useAuth";
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router";
-import { useAuth } from "../hooks/useAuth";
-import Loader from "./ui/Loader";
+import Loader from "../ui/Loader";
 
 function AppLayout() {
   const { isAuthenticated, isLoading } = useAuth();

@@ -1,5 +1,6 @@
+import { useAuth } from "@/hooks/useAuth";
 import PageNotFound from "@/pages/PageNotFound";
-import { useAuth } from "../hooks/useAuth";
+
 import { Outlet } from "react-router";
 
 function ProtectedRoutes({

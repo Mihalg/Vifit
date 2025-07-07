@@ -7,19 +7,21 @@ function Patients() {
         <div className="flex w-fit gap-2 rounded-md bg-secondary-200 px-1 py-1 dark:bg-secondary-400">
           <NavLink
             to="wizyty"
-            className="topBar-navlink rounded-md px-4 py-2 font-semibold transition-colors"
+            className="topBar-navlink rounded-md px-4 py-2 transition-colors"
           >
             Wizyty
           </NavLink>
           <NavLink
-            className="topBar-navlink rounded-md px-4 py-2 font-semibold transition-colors"
+            className="topBar-navlink rounded-md px-4 py-2 transition-colors"
             to="jadłospis"
           >
             Jadłospis
           </NavLink>
         </div>
       </div>
-      <Outlet />
+      <div className="grow overflow-y-auto">
+        <Outlet />
+      </div>
     </div>
   );
 }

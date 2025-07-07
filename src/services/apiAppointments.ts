@@ -121,3 +121,4 @@ export async function getSummaryForCharts(patient_id: number | undefined) {
 
   return appointments;
 }
+

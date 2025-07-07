@@ -155,6 +155,7 @@ function AddAppointment() {
           id="waterWeight"
           type="number"
           min={0}
+          required
         />
       </div>
       <div>
@@ -165,6 +166,7 @@ function AddAppointment() {
           id="fatWeight"
           type="number"
           min={0}
+          required
         />
       </div>
       <div>
@@ -175,6 +177,7 @@ function AddAppointment() {
           id="muscleWeight"
           type="number"
           min={0}
+          required
         />
       </div>
 

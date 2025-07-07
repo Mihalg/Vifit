@@ -1,13 +1,14 @@
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { useAuth } from "@/hooks/useAuth";
+import { login, recoverPassword } from "@/services/apiAuth";
 import { Label } from "@radix-ui/react-label";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeftIcon } from "lucide-react";
 import { FormEvent, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router";
-import { Button } from "../components/ui/Button";
-import { Input } from "../components/ui/Input";
-import { useAuth } from "../hooks/useAuth";
-import { login, recoverPassword } from "../services/apiAuth";
+
 
 function Login() {
   const queryClient = useQueryClient();

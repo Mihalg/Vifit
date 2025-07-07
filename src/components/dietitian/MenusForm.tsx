@@ -18,6 +18,7 @@ import { Input } from "../ui/Input";
 import { Label } from "../ui/Label";
 import Loader from "../ui/Loader";
 import AddDishPopover from "./AddDishPopover";
+import { memo } from "react";
 
 export type Menu = {
   name: string;
@@ -40,7 +41,6 @@ export type Menu = {
     }[];
   }[];
 };
-
 
 export default function MenusForm() {
   const queryClient = useQueryClient();
@@ -215,7 +215,7 @@ export default function MenusForm() {
   );
 }
 
-function NestedDishesForm({
+const NestedDishesForm = memo(function NestedDishesForm({
   mealIndex,
   register,
   control,
@@ -235,7 +235,7 @@ function NestedDishesForm({
 
   return (
     <div className="flex flex-col">
-      <div className="flex gap-6">
+      <div className="flex flex-wrap gap-6">
         <p className="text-xl text-primary-600 dark:text-secondary-100 lg:text-2xl">
           Pozycje wchodzące w skład posiłku
         </p>
@@ -323,4 +323,4 @@ function NestedDishesForm({
       </div>
     </div>
   );
-}
+});

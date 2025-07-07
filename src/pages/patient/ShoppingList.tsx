@@ -16,8 +16,6 @@ function ShoppingList() {
     queryFn: getShoppingListIngredients,
   });
 
-  console.log(data);
-
   const contentRef = useRef<HTMLDivElement>(null);
 
   const reactToPrintFn = useReactToPrint({ contentRef });

@@ -1,6 +1,6 @@
 import { ReactNode, useState } from "react";
-import Hamburger from "./navigation/Hamburger";
-import MainNav from "./navigation/MainNav";
+import Hamburger from "../navigation/Hamburger";
+import MainNav from "../navigation/MainNav";
 
 export default function SideBar({ children }: { children: ReactNode }) {
   const [isActive, setIsActive] = useState(false);

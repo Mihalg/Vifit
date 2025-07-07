@@ -1,10 +1,10 @@
 import { useMutation } from "@tanstack/react-query";
-import { Button } from "./ui/Button";
-import { Input } from "./ui/Input";
-import { Label } from "./ui/Label";
 import { useState } from "react";
 import { editPassword } from "@/services/apiAuth";
 import toast from "react-hot-toast";
+import { Label } from "../ui/Label";
+import { Input } from "../ui/Input";
+import { Button } from "../ui/Button";
 
 function AccountSettings() {
   const { mutateAsync, isPending } = useMutation({
@@ -18,7 +18,8 @@ function AccountSettings() {
     <div className="h-full px-4 py-4">
       <p className="mb-7 text-3xl">Ustawienia konta</p>
       <form
-        onSubmit={() => {
+        onSubmit={(e) => {
+          e.preventDefault()
           void toast.promise(mutateAsync(password), {
             success: "Zmieniono hasło.",
             loading: "Zmiania hasła...",

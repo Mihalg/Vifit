@@ -11,7 +11,7 @@ export async function addNewPatient({
     .from("users")
     .select("user_id")
     .eq("email", email)
-    .single();
+    .single()
 
   if (getPatientError) {
     console.error(getPatientError);
@@ -23,7 +23,7 @@ export async function addNewPatient({
     .insert({ dietitian_id: dietitianId, patient_id: patientId.user_id });
 
   if (error) {
-    console.log(error.message);
+    console.error(error);
     throw new Error("Wystąpił błąd. Nie udało się dodać pacjenta.");
   }
 }
