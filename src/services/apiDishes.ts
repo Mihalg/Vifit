@@ -77,8 +77,6 @@ export async function addEditDish({
   dishId: string | undefined;
   dietitianId: string | undefined;
 }) {
-  console.log(dish);
-
   //ADD
   if (!dishId && dietitianId) {
     const dishToAdd = {
